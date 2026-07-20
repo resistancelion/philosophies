@@ -1,6 +1,6 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
-_Version: 4.5.3.3_
+_Version: 4.5.3.4_
 
 #### Intoduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
@@ -274,15 +274,15 @@ Three distinct approaches could be used:
    **CSAC** unit driver will be replaced with specific counterfit for simulating the timing intervals, cutting down or expanding **timestamp** when needed.
 3. **CPPS** altered version
    **CPPS** will be replaced with slightly altered version to edit the chained time event sequences and provide virtualized **CSAC** information
-To note, any of those must be used in parallel with Ext5 FS Driver replacement masking techniques.
+To note, any of those must be used in parallel with FSOS replacement masking techniques.
 
 #### Crypto and passkeys
 
 ##### Filesystem hash integrity
 
-Filesystem Driver must strip away the file's metadata on write to drive, and then perform the hashing function on its raw content to then write the hash to the Filesystem-level metadata appointed to the file.
+FSOS must strip away the file's metadata on write to drive, and then perform the hashing function on its raw content to then write the hash to the Filesystem-level metadata appointed to the file.
 The metadata to be stripped is not a Filesystem-level metadata, but a file's own metadata, baked into its content.
-Then, on the access to the file, if the file's content is mismatched with what Filesystem remembers last about it, it must trigger a System Pause-Warning event, displaying the warning to the user to decide either to proceed with file inside Overseer, proceed with provisioning file directly or to decline it entirely (e.g routing the file to the application)
+Then, on the access to the file, if the file's content is mismatched with what FSOS/FileSystem remembers last about it, it must trigger a System Pause-Warning event, displaying the warning to the user to decide either to proceed with file inside Overseer, proceed with provisioning file directly or to decline it entirely (e.g routing the file to the application)
 
 ##### Separate machine and user passkeys
 
@@ -342,8 +342,8 @@ Applications auto-provisioned TOTPs:
 For every app, if it is non-visual, an internal TOTP must be provided if the app doesn't state otherwise - it will be utilized for signing and app internal functionality.
 For every visual application or Metafied UI-framework app pair, an external TOTP (readable by user) is required, if the OS config doesn't state otherwise (ref: **MUIPS Aura**)
 
-Tip: such logic must as well be used to encrypt specific data partitions on drives or folders, to decrypt it only before the data is provided to the proper application assigned by the Filesystem Driver.
-For the matter, if the operation is to be performed for the file, a metadata stripping for file hashing must be performed by Filesystem Driver or its respective module.
+Tip: such logic must as well be used to encrypt specific data partitions on drives or folders, to decrypt it only before the data is provided to the proper application assigned by the FSOS.
+For the matter, if the operation is to be performed for the file, a metadata stripping for file hashing must be performed by FSOS or its respective module.
 
 By all means, the exposed by the Cryptvault Password Provider Service routines and signals are a valid entries for AP regulations, so no explicit statement about security at this level is required, as **by default the HoDAP access must be authorized**.
 
@@ -365,10 +365,10 @@ _**Application Heuristic Isolation Tool is a System Level Application (not the O
 
 Container [Configuration Logic:Containers] isolation is done through launching instance of the application inside an isolated Workspace context to limit its environment to virtually "clean" instance of the SyeOS without user data inside, it is done through plugging the HoDAPs and through providing Honeypot counterfeit HoDAPs; Hardware ID Filter services are ran to imitate different running conditions and mask real HW IDs.
 **Workspace Container Environment** - plug type of Honeypot HoDAPs establish, any non-permitted interaction will be reported to callee service (Overseer for example), application operates within the global VMM context.
-**System Level Container Environment** - Hardware will be replaced with MITM type of HoDAP Honeypot, any call to real hardware will be imitated inside RAM or routed with fixed directives, leaving the spot for the permitted connections but logging everything, previous level of isolation (Workspace Level Isolation) practices also apply, but not only the SLApps are duplicatedly ran inside the isolated context, but a conterfeit System Service (OS Core Applications) such as VMM, Ext5 Driver & etc are ran to replace the real ones inside the containered environment to prevent any possibility on the middle-to-top level of security or behavioral issue.
+**System Level Container Environment** - Hardware will be replaced with MITM type of HoDAP Honeypot, any call to real hardware will be imitated inside RAM or routed with fixed directives, leaving the spot for the permitted connections but logging everything, previous level of isolation (Workspace Level Isolation) practices also apply, but not only the SLApps are duplicatedly ran inside the isolated context, but a conterfeit System Service (OS Core Applications) such as VMM, FSOS & etc are ran to replace the real ones inside the containered environment to prevent any possibility on the middle-to-top level of security or behavioral issue.
 **Virtual Machine Environment** - isolating and application inside a copy of the SyeOS, ran properly inside a Virtuial Machine Environment, applications emulate CPU and other hardware execution instructions of the SyeOS itself and the application tested.
 
-For isolating app from global VMM context inside the Container-type of isolation and to exchange applications/files both inside Virtual Machine and Container isolated Environments, a separate, altered versions of VMM and Ext5 FS Driver are required: VMM must work with isolated VMM space as a real memory space, making all metrics convincing for contained application, that it is indeed, working with real VMM, which operate not within another VMM, but within usual SyeOS instance; for the Ext5 FS Driver, it must report the hash of the exchanged files as the hash of original ones, and if the application is to request altered SLApp or Core Application binary/library, the _special_ version of Ext5 FS Driver will provide the byte-to-byde content of the original files content to those apps instead, while the version working in the RAM is the altered one.
+For isolating app from global VMM context inside the Container-type of isolation and to exchange applications/files both inside Virtual Machine and Container isolated Environments, a separate, altered versions of VMM and FSOS are required: VMM must work with isolated VMM space as a real memory space, making all metrics convincing for contained application, that it is indeed, working with real VMM, which operate not within another VMM, but within usual SyeOS instance; for the FSOS, it must report the hash of the exchanged files as the hash of original ones, and if the application is to request altered SLApp or Core Application binary/library, the _special_ version of FSOS will provide the byte-to-byde content of the original files content to those apps instead, while the version working in the RAM is the altered one.
 
 Four distinct states of Environment must be ran to analyze the hardware sniffing event(s) and detect detergent patterns:
 1. Hardware unavailable - hardware device is rendered as non-present in the computer system.
@@ -471,7 +471,7 @@ Proper tactics and vectors of optimization must be established according to the 
 
 #### Memory Health Service
 
-System will perform scheduled performance checks on physical memory modules (RAM, VRAM, CXL after basic start-up, persistent media drives after full) and non-scheduled passive diagnostics from VMM and Ext5 FS Driver and S.M.A.R.T reports of SSD/NME/HDD/USB drive(s) and drive internal heat sensor data.
+System will perform scheduled performance checks on physical memory modules (RAM, VRAM, CXL after basic start-up, persistent media drives after full) and non-scheduled passive diagnostics from VMM and FSOS and S.M.A.R.T reports of SSD/NME/HDD/USB drive(s) and drive internal heat sensor data.
 
 Service is required to warn user(s) about bad internal/removable media state and caution them before the drive(s) will enter the time period when data degradation or device failure may occur.
 Second target of this service is to provide performance diagnostics information for System Menu Settings to avise proper configuration of memory tiering and the same during the OS initial installation.
@@ -483,8 +483,8 @@ To achieve so, on system installation and later - in system drives configuration
 
 **Hierarchically**
 Slow storage HDD <-> faster storage SSD <-> fastest, RAM as a storage
-When program unloads, it saves the associated RAM FS space into the SSD/HDD drive, then when pc turns down or when the DataTime event arrives, the faster drive(s) writes data to the slower one(s).
-RAM-FS behavior should be also configurable
+When program unloads, it saves the associated RAM DS space into the SSD/HDD drive, then when pc turns down or when the DataTime event arrives, the faster drive(s) writes data to the slower one(s).
+RAM DS behavior should be also configurable
 
 **Tandem**
 Slow storage HDD - persistent memory
@@ -497,39 +497,57 @@ No memory interconnections established apart from usual RAIDs or back-up drives.
 Any of the two schemes is not colliding with the ability to set-up a back-up drive.
 While tiering and optimization is good, data integrity is no less important - logic of storing Filesystem objects in faster memory before writing them to the slower, must not be applied to removable media, in order to avoid data corruption and user confusion.
 
-#### Ext5 filesystem
+#### FileSystem Orchestration Service (FSOS)
+_**Core OS Application**_
 
-Ext5 filesystem must incorporate in itself the principles of how Ext4 stores data on physical devices, incorporating built-in support for ZFS-like behavior and no less important - per-file metadata, to be able to specify the tags, categories, score & etc not in the file itself, but within the FileSystem, agnostically to the file type, such method must have isolated compartment for file's hash, which cannot be altered through user tools, but indeed will be assigned only bu the OS Ext5 Filesystem Driver.
-The hash info, thus must be stored from the file's metadata in separate section, in case if any user want to add a "hash" as a name for meta tag.
-Such meta tags may be used by users to add notes to their files, so Ext5 must have support for file links inside metadata to make files associatable to each another.
-Ext5 must also have user-defined (on machine's administartor privelegies level if it touches the internal storage medias) configuration, which will specify:
+FSOS is all-in-one service to provide interaction layer betwen apps and FileSystem I/O operations, it itself doesn't provide FS Driver logic, instead it interacts with the available candidates and orchestrates them.
+FSOS must incorporate in itself the principles of how Zettabyte File System work, RAM DS support and more importantly - hash check practices (if the selected FS doesn't support the Hash in inode/file metadata, then FSOS must store it in DB file on partition related)
+
+FSOS must have user-defined (on machine's administartor privelegies level if it touches the internal storage medias) configuration, which will specify:
 
 1. ZFS behavior (on/off)
-2. Unify files with same content (same hash), but different metadata into the same physical data on drive, referenced with a different filelink object, which will behave exactly like the real file, and the real one will be deleted only if all references to it will.
-3. Whether to Strip away file's metadata from file format (within file's contents) and move it to the Ext5 metadata on file.
-4. Prohibit existance of 2 files with the same hash within the same physical media partition or not
-5. RAM FS settings & configuration
+2. ZeroCopy unification - same content hash but different metadata into the same physical data on drive, referenced with a different filelink object, which will behave exactly like the real file, and the real one will be deleted only if all references to it will.
+3. Whether to Strip away file's metadata from file format (within file's contents) and move it to the appropriate FSOS DB file / FileSystem's own meta-tag registry (if supported)
+4. Prohibit existence of 2 files with the same hash within the same physical media partitions or not
+5. RAM DS settings & configuration
 6. Memory tiers & RAIDs configuration
+7. MHS reporting (on/off)
    
  Cryptvault Password Provider Service or Password Manager based encryption process must take place before the unification or prohibition process.
 
- Encrypted folders support - inodes within encrypted sections must not be readable before the decryption and must be marked as encrypted.
+ Encrypted folders support - files inside folder must not be readable before the decryption and must be marked as encrypted, if FS supports - then inode encryption will take place (the Folder's Name will be encrypted too and not shown until the encryption key for it is active)
 
- Angelic Bus (Event Controller) support for all Filesystem Driver events.
+ Angelic Bus (Event Controller) support for all Filesystem events.
 
- Compatibility provisioning of Memory Health Service, supplying it with mundane operation statistics such as what was the data write and data read speeds during every operation [can be turned off]
+ Compatibility provisioning of Memory Health Service, supplying it with mundane operation statistics such as what was the data write and data read speeds during every operation
 
- If the Ext5 FS driver is operating with files inside the RAM FS situation, the hashing routine must occur before writing to the lower level drive, operating ZFS semi-uniformely between drives, keeping the logic that the non-persistent memory devices are not suitable to house the _only_ copy of file, and thus unification with unwritable or non-persistent media **must NOT occur**
-
- If the Ext5 FS driver detects that application never goes into analyzing proper file's metadata before loading it, it will support edited file version with metadata placed in respectible alignment (detection algorithm is simple: the file read request occurs, but file FS metadata read event didn't occur)
+ If the FSOS is operating with files inside the RAM DS situation, the hashing routine must occur before writing to the lower level drive, operating ZFS semi-uniformely between drives, keeping the logic that the non-persistent memory devices are not suitable to house the _only_ copy of the file, and thus unification with unwritable or non-persistent media **must NOT occur** too.
 
  The optimizatory logic of stripping away the metadata must also apply when the file write is executed, to avoid re-writing or scanning file when only its metadata was edited, for such a fast pattern scan must occur before the further operations
 Blank files must do not undergo hashing process and skipped instead, if the filelink pointing to the NULL (not a deprecated or unexistant pointer in the FileSystem, but literal blank) it is considered to point to empty file, so if the metadata is present, the only information to be gained is metadata.
-Inodes of the encrypted files do not undergo hashing or plain indexing procedures, they are protected, so if the file is to be encrypted, the content will get hashed AFTER the encryption procedure and do not participate in ZFS-like deduplication pool.
-OS Core Binaries and System Critical Files is also opted out from deduplication procedures.
-FS driver must also provide an API for user or an appliaction to exclude files from deduplication pool manually.
 
- #### VMM
+Inodes of the encrypted files do not undergo hashing or plain indexing procedures, they are protected, so if the file is to be encrypted, the content will get hashed AFTER the encryption procedure and do not participate in ZFS-like deduplication pool.
+
+OS Core Binaries and System Critical Files is also opted out from deduplication procedures.
+FSOS must provide API for user or an appliaction to exclude files from deduplication pool manually.
+
+#### Ext5 FileSystem Driver (Ext5FSD)
+_**Core OS Application**_
+
+Ext5 is main FileSystem Format recommended to use within SyeOS.
+Ext5 filesystem must incorporate in itself the principles of how Ext4 stores data and per-file metadata storage in inodes to be able to specify the tags, categories, score & etc not in the file itself, but within the FileSystem, agnostically to the file type, such method must have isolated compartment for file's hash, which cannot be altered through user tools, but indeed will be assigned only by the OS Ext5 FSD.
+The hash info, thus must be stored in separate section from the file's metadata, in case if any user want to add a "hash" as a name for meta tag.
+Such meta tags may be used by users to add notes to their files, so Ext5 must have support for file links inside metadata to make files associatable to each another.
+Encrypted folders support - inodes within encrypted sections must not be readable before the decryption and must be marked as encrypted.
+
+ If the Ext5 FSD detects that application never goes into analyzing proper file's metadata before loading it, it will support edited file version with metadata placed in respectible alignment (detection algorithm is simple: the file read request occurs, but file FS metadata read event didn't occur)
+
+ #### RAM Drive Service (RAM DS)
+ _**Core OS Application**_
+ 
+ A simple driver providing ability to store files in RAM (thjs service's memory), imitating the physical media device I/O channel.
+ 
+#### VMM
 
 To speed up the overall system performance, its own Virtual Memory Manager must support statistics collection and different application & library loading practices.
 Statistic about methods/data at which memory adresses used must be collected internally, on the session basis (start-to-finish) and the average for the whole history of app/library use.
@@ -554,8 +572,8 @@ All of the library/application will be loaded into the memory.
  In the same manner, as VMM behaves with RAM memory fragments, some service in the OS [most likely task manager] must behave with task's files, while keeping the note in which container context the app was executed and omitting analysis of unsufficient files to monitor.
  The monitoring heuristics must analyze relation of read speed required (and how much application stales from the hikkups) - if the read rate is sufficient enough to make no real operational difference (measured by throughput from the program's inputting "pipe" to the outputting "pipe" either it be other file, data stream [audio for example] or pixel matrix; game performance is measured by the fps metrics, for se).
  (let's say less than 10mb by default; configurable.) while also monitoring the read/write rate required by the application's process;
- If the file is being written too fast and application stales between write operations, they need to be dealt with the new way apart from Hold and Cold loads -> Tempered Write (part by part to virtual RAM FS input stream, then to real physical memory);
- If the file is being re-written too often and it will probably damage the TBW limit sufficient enough to be concerned (not a log file, required to be appended everytime, but something like browser cache) - it must be treated as a high data corruption risk and undergo Cold Write process: stored in RAM FS until the application finishes its work or Date-Time event occurs (time passes by long enough) - {WriteOnFinish, WritePerInterval X and WriteOnFinish}
+ If the file is being written too fast and application stales between write operations, they need to be dealt with the new way apart from Hold and Cold loads -> Tempered Write (part by part to virtual RAM DS input stream, then to real physical memory);
+ If the file is being re-written too often and it will probably damage the TBW limit sufficient enough to be concerned (not a log file, required to be appended everytime, but something like browser cache) - it must be treated as a high data corruption risk and undergo Cold Write process: stored in RAM DS until the application finishes its work or Date-Time event occurs (time passes by long enough) - {WriteOnFinish, WritePerInterval X and WriteOnFinish}
  
  User may also specify the proper approach manually.
 
@@ -563,8 +581,8 @@ Cold Load:
 Files will be loaded when app requests them to be
 
 Hot Load:
-If the RAM FS or Dynamic RAM FS (without fixed size) is enabled, then Hot Load is possible.
-Files specified by user or often loaded by the application will be loaded into RAM FS hook at the application startup, to avoid hikkups whenever the application unloads or loads them, such file could be sound libraries for MIDI-based and Studio Work, game assets, software emulation libraries, etc.
+If the RAM DS or Dynamic RAM DS (without fixed size) is enabled, then Hot Load is possible.
+Files specified by user or often loaded by the application will be loaded into RAM DS hook at the application startup, to avoid hikkups whenever the application unloads or loads them, such file could be sound libraries for MIDI-based and Studio Work, game assets, software emulation libraries, etc.
 
 #### Meta-libs (meta-libraries) as compatibility layer
 
