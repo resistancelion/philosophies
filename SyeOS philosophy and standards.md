@@ -1,6 +1,6 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
-_Version: 4.5.3.5_
+_Version: 4.5.4_
 
 #### Intoduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
@@ -60,7 +60,7 @@ Listener.ReceivesDataObject (Boolean)
 Listener.Repeat (Int) - how many times to repeat, if set to -1, then the event is 
 Listener.InfRepeat (Boolean) - if true, Listener.Repeat will be ignored, and instead listener will be called every time Event occurs
 Listener.CallOnMissRepeat = {None from past stack; One from past stack; Every from past stack}
-Listener.CallOnMissRepeatOneTimeStackPos = MASK ({First, Last, Center})
+Listener.CallOnMissRepeatOneTimeStackPos = MASK ({First, Last, Center, All})
 Listener.DateTimeTolerance (Int)
 
 ##### Listener denial cases
@@ -118,7 +118,8 @@ stateAction = mtds[(int)contentChanged];
 
 **Never ever make a function (in low-level programming languages) which will do return values instead of outputing them into the variables**
 
-#### Critical Reliance Mode (CRM) and Code Execution standards (CRM-CES)
+#### Critical Reliance Mode (CRM) and Code Execution Standards (CRM-CES)
+Critical Reliance Mode is a mode for executing vital applications, their code must be compliant with CES to sustain it.
 
 ##### SyeOS
 
@@ -168,7 +169,7 @@ App must not let User expose themselve to threat, if Application know that there
 P3
 Every Application must be compliant at least with **CRM-CES** SyeOS standard, so it can be switched or compiled into **CRM**, so the OS will be reliable enough to be used in Church Broadcast Media, Security Stations, Power Transformer Operator Consoles, etc.
 
-#### Hardware layer encapsulation
+#### Hardware Layer Encapsulation
 
 ##### ACL & AP
 
@@ -291,6 +292,7 @@ Machine settings, and topmost administrative settings must be managed through th
 ##### Compilers lockdown
 
 Only local Filesystem interactions are permited for compiles to perform during the compilation, if downloading of some content is required, then it must be performed BEFORE the compilation software will involve.
+Hybrid Overseer scanning (source and binary) is required after the compilation.
 
 ##### Binaries lockdown
 
@@ -404,7 +406,7 @@ Metafied UI analysis is straightforward block-to-block analysis, with color appr
 For the non-Metafied apps Overseer must use PDQ-alike techniques and color averaging.
 Metafied apps and apps with proper CCL headers is the best for testing, since they can be tested through CCL calls.
 For CCL calls from Overseer and for CCL calls monitoring by Overseer, it must have AP permission to skip CCL Isolation.
-If the app exceeds the Buffer Request Limit under **CRM-CES** **Aerospace Cyclic Executive Architecture** enacted system condition, it must be flagged as unoptimized or suspicious and its Execution Priority (for example, Time Critical) must be elevated by the Overseer, if the app itself is not of a high criticality (ref: **CRM-CES**, **Aerospace Cyclic Executive Architecture**, P4)
+If the app exceeds the Buffer Request Limit under **CRM-CES** **Aerospace Cyclic Executive Architecture** enacted system condition, it must be flagged as unoptimized or suspicious and its Execution Priority (for example, Time Critical) must be de-elevated by the Overseer, if the app itself is not of a high criticality (ref: **CRM-CES**, **Aerospace Cyclic Executive Architecture**, P4)
 
 Overseer could be used to run not only unknown software, but also an unknown files inside known software to limit the threat possibility (if CVE is found to take effect when the file's inner structure is altered)
 On the finish of the execution, Overseer will file a report about the program's behavior and related metrics, reporting to user vulnerability/threat level and performance scores during the security analysis pass, if the app scores enough credibility to undergo next pass (with lower tier safety in A.H.I.T) it will undergo automatically, if the application is not yet considered a threat, but misbehaves, user will be presented with option to stop on the current step or go further.
@@ -431,16 +433,58 @@ Cube - obstructware, fraudware and ransomware (non-harmful directly) - ad-induci
 CheckerBoard - faulty software, that has instabilities or plainmode crashes due to data, condition variation or a run time
 
 #### Overseer Critical Performance Scorer Module (source-code and execution analyst)
+##### Suspicious characters counter
+Source Code analysis
 
-#### MUIPS Aura
-To combat visual similarity app spoofing, a WM visual trait is required: MUIPS Aura
-Functionality: every appliaction will have colored shadow and/or symbolizing icon on its frame border.
-The color of the shadow and the content of the icon will vary from app-to-app, and must derive from app's external TOTP, so it can be checked by calculator which application activity user is seeing.
+Scans for zero-width, escape, control and highly-weighted characters inside the Source Code, which are not a part of the regular set for programming in the Source Code language.
+
+##### OnDe Score
+Source Code analysis 
+
+Ontological Density Scorer measures methods call graph complexity and API semantical cleanliness comparing the two to the overall Source Code byte weight (without measuring the weight of commented section)
+
+##### API mutation score
+Source Code analysis
+
+If Overseer has test files for prevision version of the applciation source code, it tests the difference between declarations and header files, outlining the differences for the report of incompatible or extended parameters between the versions.
+
+##### Documentation reliability
+Source FIles general analysis
+
+Matches the patterns of the provided API (headers) with the mentions provided within the allocated documentation for the program, if there are differences between them - warns about documentation deprecation state.
+
+##### CCL table reliability
+Source FIles general analysis
+
+If the application's CCL table is incompatible with the real declarations of methods/variables within it, then Overseer reports fatal mismatch and stops before further analysis.
+
+##### Codebase Compliance Score
+Source Code analysis
+
+Score is measured by the related count of total methods to the count of methods which have ftechniques stated as unwanted or forbidden in **Programming Tips** guidelines.
+CRM-CES compliance is measured afterwards, by comparing all of the code with the CRM-CES standards (SyeOS standard and Aerospace Cyclic Executive Architecture), applications with insufficient score will be marked as unsuitable to be used as Core OS or SL App.
+
+##### Thermodynamic Ephicacy Coefficient score
+Run-time analysis
+
+Safety scan
+If the program Thermodynamical Activity (CPU/GPU load) is way too dependant on the HoDAP inbound traffic content, the analyser lowers the application secureness score, as it has some inefficiencies or hidden stenographics. The measurement will be taken on the average when the different test data pattern will be applied.
+
+Performance scan
+The dynamic TEC measurement will be used to monitor quantity of activity spikes (TEC fluctuational fade/stabilization/spike) during execution of complicated mathematical operations will be added to OnDe analysis score.
+
+If the Application is not a new version of Core OS or SL App and has higher OnDe score than that of an average for previous OS Core scores, the app will trigger warning flagging the coding techniques as unusually sophisticated (high optimization is not always a sign of malware, but user input will be required to clarify the situation)
 
 #### System's Operator and User security
 P1 Warnings and cautions about hardware, malware, operational, runtime environment threats and errors must not have option to "skip by default", even if they are recurring
 P2 Informing techniques must be concise in order to inform fast
 P3 Information techniques shall use combinatory logic for critical environments in which multiple warnings/errors/cautions can hit at the same exact moment. Ssuch as using combinatory logic for reporting (ref: example: **Overseer**, **threat categorization**) - it may use combinatory set of shapes, colors, sounds that do not highly interfere with each other and can be recognized under urgent information provisioning.
+
+##### Window Manager Aura
+To counter visual interface spoofing, a WM visual trait is required: Aura
+Functionality: every appliaction will have colored shadow and/or symbolizing icon on its frame border.
+The color of the shadow and the content of the icon will vary from app-to-app, and must derive from app's external TOTP, so it can be checked by calculator which application activity user is seeing.
+Windows of the same app share the same Aura.
 
 #### Direct Hardware Contact isolation practice
 
@@ -524,7 +568,7 @@ FSOS must have user-defined (on machine's administartor privelegies level if it 
  If the FSOS is operating with files inside the RAM DS situation, the hashing routine must occur before writing to the lower level drive, operating ZFS semi-uniformely between drives, keeping the logic that the non-persistent memory devices are not suitable to house the _only_ copy of the file, and thus unification with unwritable or non-persistent media **must NOT occur** too.
 
 The optimizatory logic of stripping away the metadata must also apply when the file write is executed, to avoid re-writing or scanning file when only its metadata was edited, for such a fast pattern scan must occur before the further operations
-Blank files must do not undergo hashing process and skipped instead, if the filelink pointing to the NULL (not a deprecated or unexistant pointer in the FileSystem, but literal blank) it is considered to point to empty file, so if the metadata is present, the only information to be gained is metadata.
+Blank files must do not undergo hashing process and skipped instead, if the filelink pointing to the NULL (not a deprecated or unexisting pointer in the FileSystem, but literal blank) it is considered to point to empty file, so if the metadata is present, the only information to be gained is metadata.
 If FSOS detects that application never goes into analyzing proper file's metadata before loading it, it will support edited file version with metadata placed in respectible alignment (detection algorithm is simple: the file read request occurs, but file FS metadata read event didn't occur)
 
 Inodes of the encrypted files do not undergo hashing or plain indexing procedures, they are protected, so if the file is to be encrypted, the content will get hashed AFTER the encryption procedure and do not participate in ZFS-like deduplication pool.
@@ -572,7 +616,7 @@ All of the library/application will be loaded into the memory.
  The monitoring heuristics must analyze relation of read speed required (and how much application stales from the hikkups) - if the read rate is sufficient enough to make no real operational difference (measured by throughput from the program's inputting "pipe" to the outputting "pipe" either it be other file, data stream [audio for example] or pixel matrix; game performance is measured by the fps metrics, for se).
  (let's say less than 10mb by default; configurable.) while also monitoring the read/write rate required by the application's process;
  If the file is being written too fast and application stales between write operations, they need to be dealt with the new way apart from Hold and Cold loads -> Tempered Write (part by part to virtual RAM DS input stream, then to real physical memory);
- If the file is being re-written too often and it will probably damage the TBW limit sufficient enough to be concerned (not a log file, required to be appended everytime, but something like browser cache) - it must be treated as a high data corruption risk and undergo Cold Write process: stored in RAM DS until the application finishes its work or Date-Time event occurs (time passes by long enough) - {WriteOnFinish, WritePerInterval X and WriteOnFinish}
+ If the file is being re-written too often and it will probably damage the TBW limit sufficient enough to be concerned (not a log file, required to be appended everytime, but something like browser cache) - it must be treated as a high data corruption risk and undergo Cold Write process: stored in RAM DS until the application finishes its work or Date-Time event occurs (time passes by long enough) - {WriteOnFinish, WritePerInterval X and WriteOnFinish}.
  
  User may also specify the proper approach manually.
 
@@ -591,7 +635,7 @@ UNIX and Linux based OS known for having one particular issue - if the dependanc
 
 Integrating HoDAP & FS hooks into VME yields ability to directly bridge hardware to VM [for example, drive containing OS]
 
-### Configuration logic
+### Configuration
 
 Every configuration is derived from the Parent one, if nothing new stated then the Parental configs apply, however ACL and CCL do not share this "inheritance" logic - limitations can be only hardened, not freed up, but they do not come from unathorized providing.
 
@@ -613,6 +657,88 @@ Configuration of Workspace may also contain lists of appointments for metafied S
 2. So-called "Meta-apps" layout list [refer to Configuration logic, Meta-apps]
 
 ##### Workspace Events
+Workspace Load
+Workspace Unload
+Workspace Switch {In, Out}
+Workspace {Display, HID} Assigned
+Workspace {Display, HID} UnAssigned
+Workspcae {Display, HID} Switched
+WorkScreen {Focus, UnFocus}. 
+
+##### WorkScreen Layout
+Every WorkScreen can have its own layout, selecting the main Desktop provider application (can be any), and instead of Widgets - other applications, atop (with other Z indexes) or at side of the main application, aligned to themselves, fixed, unified by splitview mode or tileswitch mode.
+Default Desktop application is File Navigator, displaying the assigned path to the Workspace's Desktop Folder in FileSystem.
+Creating a new instance of the same Workspace Layout just creates a new WorkScreen for it, if the WorkSpace do not have **Isolated** flag
+
+#### Window Manager
+Window Manager must support Window Frame confguration in the manner:
+Window Auto-Anchor after nearing to other with Auto-Anchor (Boolean)
+Window Capture HID (Boolean)
+Window Type (Int)
+Window Border Count (Int)
+Window Border Width (Int)
+Window Border Orientations [] (Degree from 0° to 180°) - as example 0°, 45°, 90°, 135°, 180° is Top, Right, Bottom, Left positions for rectangular Window Frames;
+Window Border positions will be derived from the known supplied Application Content Boundaries and the current size of Applcation Window.
+Window Border's Control Elements Alignment - Alignment (Left, Center, Right)
+Window Border's Control Element Rotation - will determine the rotation of the line of the elements, as they can be vertically displayed even when the Border is itself in horizontal position in relation to the Window.
+Window Border's Control Elements - Set [] of elements to display on the Border surface the property is applied to; Possible elements:
+
+0. Close
+1. Maximize/Minimize
+2. Maximize/Minimize Horizontally
+3. Maximize/Minimize Vertically
+4. Fold Up/Unfold
+5. Hide to Current Window/Task list
+6. Pin/Unpin
+7. Enter Fullscreen Mode
+8. Scaling Lock/Unlock
+9. Move Window
+10. Open System Settings Menu for Application
+11. Open Window Manager Menu for Application
+12. Positioning Menu Opener (Menu: Window WorkScreen Anchoring, Windows Splitview/Related Layout assigner, Window Transparency, Window Z-order pin (Dynamic/Integer (fixed)/AlwaysAtBottom/AlwaysAtTop))
+13. Freeze/UnFreeze Process
+14. Open/Hide In-Window Search Bar
+15. Display Process's Console Log/Display Process's Window
+16. Throw to the next Workspace/Screen
+17. Throw to the previous Workspace/Screen
+18. Throw to the upper Workspace/Screen
+19. Throw to the bottom Workspace/Screen
+20. Show/Do Not Show Notifications
+21. Sound Level Control
+22. Sound present/mute
+23. Take screenshot
+24. Record video Start/Pause/Stop
+25. Record audio Start/Pause/Stop
+26. Screen record prohibit on/off
+27. Audio record prohibit on/off
+28. VNC transmission on/off
+29. Mic switch on/off
+30. Network switch on/off
+31. Bluetooth switch on/off
+32. RAM Graph
+33. VRAM Graph
+34. CPU Graph
+35. GPU Graph
+36. Storage Graph
+37. Audio Dbs Graph
+38. Bluetooth Activity Graph
+39. Network Activity Graph
+40. Thermodynamical Ephicacy Coefficient Graph
+41. RAM Usage Label
+42. VRAM Usage Label
+43. CPU Usage Label
+44. GPU Usage Label
+45. Storage Usage Label
+46. Audio Dbs Label
+47. Bluetooth Usage Label
+48. Network Usage Label
+49. Thermodynamical Ephicacy Coefficient  Label
+
+#### Meta-app
+Meta application is type of application constructed by specifying Meta-app layout, determining the required APs, set of required apps/framework apps, their CCL & HoDAP interaction layout and if needed - their unified Metafied UI layout file or/and their respectible application windows layout.
+After creating a proper Meta-app layout it can be installed locally or globally as a ULApp package.
+
+_Meta-app layouting can be used to construct IDEs from Code Editor, File Navigator, Compiler and Graphical Debugger applications._
 
 ### Section about UX & UI
 #### Section about Metafied UI
@@ -620,7 +746,7 @@ Configuration of Workspace may also contain lists of appointments for metafied S
 #### Section about Process clustering, splitview and WM
 
 ### Section about Apps
-#### Section about Workspace Layout Editor
+#### Section about Workspace & WorkScreen Layout Editor
 #### Section about Meta-app layout editor
 #### Section about Metafied UI editor
 #### Section about Cryptvault Configurator
