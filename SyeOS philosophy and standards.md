@@ -1,6 +1,6 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
-_Version: 4.5.4_
+_Version: 4.5.4.1_
 
 #### Intoduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
@@ -9,7 +9,7 @@ SyeOS philosophy was thought after Portable Workstation requirements: virtual wo
 The provided below philosophy must apply not only to the OS itself, but for applications written for it.
 Diffrent philosophy points in paragraps are listed as PN, where P is short for Philosophy and N is a number.
 
-## Philosophy
+## Philosophy and Concepts
 
 ### Apps
 
@@ -464,7 +464,7 @@ Source Code analysis
 Score is measured by the related count of total methods to the count of methods which have ftechniques stated as unwanted or forbidden in **Programming Tips** guidelines.
 CRM-CES compliance is measured afterwards, by comparing all of the code with the CRM-CES standards (SyeOS standard and Aerospace Cyclic Executive Architecture), applications with insufficient score will be marked as unsuitable to be used as Core OS or SL App.
 
-##### Thermodynamic Ephicacy Coefficient score
+##### Thermodynamic Efficacy Coefficient score
 Run-time analysis
 
 Safety scan
@@ -504,7 +504,7 @@ exFAT, FAT4
 If needed to avoid detection of slipping through information by exposing that certain key combinations do not ever execute within the Workspace or Virtual Machine, gibing potential or hypothetical spyware a data reference, an alternative than a sequence to escape the encapsulation HID capture must be provided by SyeOS - a hook to respond on the pressing of power/reset button (not the event of lid closing for notebooks! important to not mix those up) - when the power button while inside an Workspace with active HID isolation (and there are no multiple HIDs, for example, keyboards/touchscreens to be associated with multiple screens), the SyeOS should just switch control back to the main host OS.
 Configuration entries for Workstations with HID isolation: 
 ReturnToHostESbyPowerButton (Boolean)
-SendToIsolatedEPowerButtonEvent = Mask (Send/Do not & Accept/Dismiss Isolated Environment shutdown)
+SendToIsolatedEPowerButtonEvent = Mask (Send/Do not & Accept/Dismiss Isolated Environment shutdown) - if the flag Do Not Send is present, then the ACPI event won't get inside the Contained Environment's Angelic Bus or VME's ACPI device emulation.
 
 ### Performance and optimization
 
@@ -515,7 +515,7 @@ Proper tactics and vectors of optimization must be established according to the 
 
 #### Memory Health Service
 
-System will perform scheduled performance checks on physical memory modules (RAM, VRAM, CXL after basic start-up, persistent media drives after full) and non-scheduled passive diagnostics from VMM and FSOS and S.M.A.R.T reports of SSD/NME/HDD/USB drive(s) and drive internal heat sensor data.
+System will perform scheduled performance checks on physical memory modules (RAM, VRAM, CXL after basic start-up, persistent media drives after full) and non-scheduled passive diagnostics from VMM and FSOS and S.M.A.R.T reports of SSD/NVME/HDD/USB drive(s) and drive internal heat sensor data.
 
 Service is required to warn user(s) about bad internal/removable media state and caution them before the drive(s) will enter the time period when data degradation or device failure may occur.
 Second target of this service is to provide performance diagnostics information for System Menu Settings to avise proper configuration of memory tiering and the same during the OS initial installation.
@@ -723,7 +723,7 @@ Window Border's Control Elements - Set [] of elements to display on the Border s
 37. Audio Dbs Graph
 38. Bluetooth Activity Graph
 39. Network Activity Graph
-40. Thermodynamical Ephicacy Coefficient Graph
+40. Thermodynamical Efficacy Coefficient Graph
 41. RAM Usage Label
 42. VRAM Usage Label
 43. CPU Usage Label
@@ -732,7 +732,7 @@ Window Border's Control Elements - Set [] of elements to display on the Border s
 46. Audio Dbs Label
 47. Bluetooth Usage Label
 48. Network Usage Label
-49. Thermodynamical Ephicacy Coefficient  Label
+49. Thermodynamical Efficacy Coefficient  Label
 
 #### Meta-app
 Meta application is type of application constructed by specifying Meta-app layout, determining the required APs, set of required apps/framework apps, their CCL & HoDAP interaction layout and if needed - their unified Metafied UI layout file or/and their respectible application windows layout.
