@@ -1,6 +1,7 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
-_Version: 4.5.4.1_
+
+_Version: 4.5.4.2_
 
 #### Intoduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
