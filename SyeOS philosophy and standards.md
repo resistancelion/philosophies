@@ -1,7 +1,7 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
 
-_Version: 4.5.4.2_
+_Version: 4.5.4.3_
 
 #### Intoduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
@@ -31,7 +31,7 @@ Functionally similar workflow apps must use the same Metafied UI design  - with 
 Example: Telegram, Discord, Viber, WhatsApp, SnapChat, Facebook Messenger, Signal, Threema - can be grouped together into their own group, there is one optimal interface for "messenger" app, as the data and info flow is not flexible, unlike IDE that has specifics - one IDE for mobile apps, other for games, other for web apps & so on and so forth.
 
 Visual interaction elements must have the same experience app-to-app.
-Visual element disposition and visual obstructance must be NOT ADDICTING and NOT ANNOYING, targeted at the fastest representative data perception and management as possible, such deviations as different button flavours, that essentialy do functionality that can be combined by action mix analysis into one button is not tolerated (refer to the video on Audacity re-desing and how they managed to make it more unified & concise - https://youtu.be/QYM3TWf\_G38 )
+Visual element disposition and visual obstructance must be NOT ADDICTIVE NOR ANNOYING, targeted at the fastest representative data perception and management as possible, such deviations as different button flavours, that essentialy do functionality that can be combined by action mix analysis into one button is not tolerated (refer to the video on Audacity re-desing and how they managed to make it more unified & concise - https://youtu.be/QYM3TWf\_G38 )
 
 Every list of object, every textview must have a search functionality - for lists to select from them faster; for text fields - to find partial matches.
 
@@ -73,11 +73,36 @@ If the .ReceivesDataObject set to True, the possibility of passing event call st
 For added only:
 Listener cannot have timestamp, that already have passed as its trigger.
 
-#### Programming tips
+#### Coding Logic Standards (CLS)
+**Critical Reliance Mode(CRM) is a mode for executing vital applications, their code must be compliant with related CLS to sustain it.**
+
+##### Basic
 
 An application must be ready to work in "data flow" mode like a C/C++ object, where the real execution code of Object is separate from the Object Instance itself, and the Object Instance works like a data flowing into the optimized Object for RAM usage optimization and vice versa for Execution Time optimziation.
-C/C++ style case-switch jumps - compare first, then **jmp** to the **label** inside function scope, avoid using nested if-else statements.
 Dynamic programming techniques is highly advised, recursive is to be most avoided - stacking the calling stack every time will slow down performance by a lot, furthermore some of the loops can be executed simultaneously instead of one inside another.
+
+C/C++ style case-switch jumps - compare first, then **jmp** to the **label** inside function scope, avoid using nested if-else statements.
+Example:
+```cpp
+void execute_opcode(int opcode) {
+    // Array of memory addresses for the labels
+    static void *dispatch_table[] = { &&op_zero, &&op_one, &&op_two };
+    
+    // Jump directly to the memory address + offset
+    goto *dispatch_table[opcode]; 
+
+op_zero:
+    // routine 0
+    return;
+op_one:
+    // routine 1
+    return;
+op_two:
+    // routine 2
+    return;
+}
+```
+
 Dynamic parametrical behavior instead of if-else in Time Critical Subroutines
 Example on how-to
 ```cpp
@@ -109,7 +134,7 @@ int main() {
 
 ```
 
-Use array accessing instead of switch-case when counted association needed, when it is faster
+Use array accessing or **jmp** instructions instead of switch-case when counted association needed, when it is faster
 Example (in this example, it will work slower, but when working with wide range of possible numbers, it'll do)
 ```cpp
 std::function<void()> mtds[2] = {[&FTPServer]() { FTPServer.m1_passive(); }, [&FTPServer]() { FTPServer.m1_active(); }};
@@ -119,10 +144,27 @@ stateAction = mtds[(int)contentChanged];
 
 **Never ever make a function (in low-level programming languages) which will do return values instead of outputing them into the variables**
 
-#### Critical Reliance Mode (CRM) and Code Execution Standards (CRM-CES)
-Critical Reliance Mode is a mode for executing vital applications, their code must be compliant with CES to sustain it.
+Array Access optimization: Indirect Array Access for non-static Arrays
+Indexes of the array must be stored as a separate, re-arrangable array, when the data containing part must be stored as bare, thus way, the program won't re-arrange the heavy data contained in the Array every time the sorting must change, the logic can also be used to acess Dictionary Arrays, where the string corresponds to the index in the Array.
+Example:
+```cpp
+std::vector<MyHeavyObject> arrayData;
+std::vector<size_t> indexArray;
 
-##### SyeOS
+// Initialize
+indexArray.resize(arrayData.size());
+std::iota(indexArray.begin(), indexArray.end(), 0); // Fills with 0, 1, 2...
+
+// Sorting the index array (Data stays untouched)
+std::sort(indexArray.begin(), indexArray.end(), [&](size_t a, size_t b) {
+    return arrayData[a].someValue < arrayData[b].someValue;
+});
+
+// Accessing data in the sorted order
+MyHeavyObject &result = arrayData[indexArray[requestedIndex]];
+```
+
+##### CRM: SyeCore
 
 P1 The parts of the code must be separated into distinct categories by underlying result of malfunctioning:
 Category 0: Malfunction yields 0 or insignificant amount of harm, or harm that can be corrected on the next execution cycle (looped processes, HW PID sensing, repeatable control surface cycles)
@@ -142,7 +184,7 @@ P3 Pragmatic informational interrupts
 Operator notification process MUST NOT interrupt the critical code execution.
 Operator notification must be thought after the design of the operated system type, if it requires operator high attention span on multiple things or one dashboard requires multiple operators, the warning, cautions and logs must not interrupt the operatory process itself either, but point to mission critical information (if any)
 
-##### Aerospace Cyclic Executive Architecture
+##### CRM: Aerospace Cyclic Executive Architecture
 
 P1 Time Partitioning:
 Process/Container must receive a dedicated, strictly counted **Operational Time Window** in which 0 other processes can crawl (example: 40 ms every 100 ms)
@@ -168,7 +210,7 @@ P2
 App must not let User expose themselve to threat, if Application know that there is some door, it must not leave it unsupervised, only user/optimization setting can be taken as an excuse
 
 P3
-Every Application must be compliant at least with **CRM-CES** SyeOS standard, so it can be switched or compiled into **CRM**, so the OS will be reliable enough to be used in Church Broadcast Media, Security Stations, Power Transformer Operator Consoles, etc.
+Every Application must be compliant at least with **CLS CRM: SyeCore** standard, so it can be switched or compiled into **CRM**, so the OS will be reliable enough to be used in Church Broadcast Media, Security Stations, Power Transformer Operator Consoles, etc.
 
 #### Hardware Layer Encapsulation
 
@@ -270,7 +312,7 @@ Video stream masking through drawing applications with another bit depth, color 
 CPU/GPU cycle skip (pause) specific to app context - to imitate different clock speed, skip/pause application execution for configured N of cycles/for targeted clock rate.
 Timezone and time error masking - assigning to a container a different (presented to it) timezone or even a clock error (adrift from the real UTC time):
 Three distinct approaches could be used:
-1. **CRM-CES**, **Aerospace Cyclic Executive Architecture**, P3:
+1. **CLS CRM: Aerospace Cyclic Executive Architecture**, P3:
   Isolated process/container is executed in this environment to prevent its logic of detecting isolation by analysis of asynchronous Memory Bus delays. 
 2. **CSAC** simulation
    **CSAC** unit driver will be replaced with specific counterfit for simulating the timing intervals, cutting down or expanding **timestamp** when needed.
@@ -322,6 +364,8 @@ _**Core OS Application**_
 In order to limit vulnerability of Cryptvault Devices, the OS's own service must isolate the device to itself exclusively during the OS shell runtime, providing cryptvault keys or cryptvault-encrypted/decrypted data to a specific HoDAPs [such Endpoints can be anything, files, strings, DB entries, device data streams, contacts, etc, ...] upon request.
 For this matter,  decrypted data must never ever enter the persistent memory, only encrypted data is granted to reside within it, unrelated to which device performs the encryption/decryptiion routine.
 
+_Suggested Cryptvault Device: YubiKey_
+
 Request acception or decline must be determined through administrative level configuration setting per HoDAP, specifying if the biometric/password check is needed before proceeding, and to which ID the passkey[or passwordkey-based decryption/encryption action] pairs  (**Session Secrets**) it will point - for example, such practices of one target multiple pointers could be used to hook up the DAPs aimed at the specific contact in various messenger applications, to automatically encrypt content exchanged between the _contact_ and the user.
 For the sake of the timestamped encryption the Cryptvault Password Provider Service must be able to perform timestamp-mutated key (TOTP) encryption, both for situations when the Cryptvault device is supporting it natively, and for situations when the Cryptvault Password Provider Service will perform it itself.
 As an option, CSAC support and time latency tolerance settings must be present.
@@ -343,7 +387,7 @@ The **SYS_FLUSH_CRYPTO** condition must also block any new key generation or des
 
 Applications auto-provisioned TOTPs:
 For every app, if it is non-visual, an internal TOTP must be provided if the app doesn't state otherwise - it will be utilized for signing and app internal functionality.
-For every visual application or Metafied UI-framework app pair, an external TOTP (readable by user) is required, if the OS config doesn't state otherwise (ref: **MUIPS Aura**)
+For every visual application or Metafied UI-framework app pair, an external TOTP (readable by user) is required, if the OS config doesn't state otherwise (ref: **Window Manager Aura**)
 
 Tip: such logic must as well be used to encrypt specific data partitions on drives or folders, to decrypt it only before the data is provided to the proper application assigned by the FSOS.
 For the matter, if the operation is to be performed for the file, a metadata stripping for file hashing must be performed by FSOS or its respective module.
@@ -407,7 +451,7 @@ Metafied UI analysis is straightforward block-to-block analysis, with color appr
 For the non-Metafied apps Overseer must use PDQ-alike techniques and color averaging.
 Metafied apps and apps with proper CCL headers is the best for testing, since they can be tested through CCL calls.
 For CCL calls from Overseer and for CCL calls monitoring by Overseer, it must have AP permission to skip CCL Isolation.
-If the app exceeds the Buffer Request Limit under **CRM-CES** **Aerospace Cyclic Executive Architecture** enacted system condition, it must be flagged as unoptimized or suspicious and its Execution Priority (for example, Time Critical) must be de-elevated by the Overseer, if the app itself is not of a high criticality (ref: **CRM-CES**, **Aerospace Cyclic Executive Architecture**, P4)
+If the app exceeds the Buffer Request Limit under **CLS CRM: Aerospace Cyclic Executive Architecture** OS operating condition, it must be flagged as unoptimized or suspicious and its Execution Priority (for example, Time Critical) must be de-elevated by the Overseer, if the app itself is not of a high criticality (ref: **CLS CRM: Aerospace Cyclic Executive Architecture**, P4)
 
 Overseer could be used to run not only unknown software, but also an unknown files inside known software to limit the threat possibility (if CVE is found to take effect when the file's inner structure is altered)
 On the finish of the execution, Overseer will file a report about the program's behavior and related metrics, reporting to user vulnerability/threat level and performance scores during the security analysis pass, if the app scores enough credibility to undergo next pass (with lower tier safety in A.H.I.T) it will undergo automatically, if the application is not yet considered a threat, but misbehaves, user will be presented with option to stop on the current step or go further.
@@ -462,8 +506,8 @@ If the application's CCL table is incompatible with the real declarations of met
 ##### Codebase Compliance Score
 Source Code analysis
 
-Score is measured by the related count of total methods to the count of methods which have ftechniques stated as unwanted or forbidden in **Programming Tips** guidelines.
-CRM-CES compliance is measured afterwards, by comparing all of the code with the CRM-CES standards (SyeOS standard and Aerospace Cyclic Executive Architecture), applications with insufficient score will be marked as unsuitable to be used as Core OS or SL App.
+Score is measured by the related count of total methods to the count of methods which have ftechniques stated as unwanted or forbidden in **CLS Basic** guidelines.
+CLS compliance is measured afterwards, by checking source code against list of {forbidden, unwanted, proper} coding techniques, applications with insufficient score will be marked as unsuitable to be used as Core OS (incompliance with any of CLS CRM) or SL App (uncompliant with CLS Basic).
 
 ##### Thermodynamic Efficacy Coefficient score
 Run-time analysis
@@ -486,6 +530,11 @@ To counter visual interface spoofing, a WM visual trait is required: Aura
 Functionality: every appliaction will have colored shadow and/or symbolizing icon on its frame border.
 The color of the shadow and the content of the icon will vary from app-to-app, and must derive from app's external TOTP, so it can be checked by calculator which application activity user is seeing.
 Windows of the same app share the same Aura.
+The effect is displayed as animated semi-transparent colored shadow/outline of the Window, the ongoing sequence is derived from TOTP and so is changing every time CPPS update TOTP.
+
+Theoretical screen capture mitigation:
+Provide screen buffer with no "Aura" effect present - exclude the content from screen capture pipelines.
+(configurable: on/off)
 
 #### Direct Hardware Contact isolation practice
 
