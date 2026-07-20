@@ -432,17 +432,17 @@ CheckerBoard - faulty software, that has instabilities or plainmode crashes due 
 
 #### Overseer Critical Performance Scorer Module (source-code and execution analyst)
 
-#### Direct Hardware Contact isolation practice
-
 #### MUIPS Aura
 To combat visual similarity app spoofing, a WM visual trait is required: MUIPS Aura
 Functionality: every appliaction will have colored shadow and/or symbolizing icon on its frame border.
 The color of the shadow and the content of the icon will vary from app-to-app, and must derive from app's external TOTP, so it can be checked by calculator which application activity user is seeing.
 
-#### System Operator and User security
+#### System's Operator and User security
 P1 Warnings and cautions about hardware, malware, operational, runtime environment threats and errors must not have option to "skip by default", even if they are recurring
 P2 Informing techniques must be concise in order to inform fast
 P3 Information techniques shall use combinatory logic for critical environments in which multiple warnings/errors/cautions can hit at the same exact moment. Ssuch as using combinatory logic for reporting (ref: example: **Overseer**, **threat categorization**) - it may use combinatory set of shapes, colors, sounds that do not highly interfere with each other and can be recognized under urgent information provisioning.
+
+#### Direct Hardware Contact isolation practice
 
 ##### General driver isolation practice
 
