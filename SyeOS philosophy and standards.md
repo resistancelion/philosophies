@@ -1,6 +1,6 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
-_Version: 4.5.3.4_
+_Version: 4.5.3.5_
 
 #### Intoduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
@@ -241,7 +241,7 @@ Neighbours can be specified to be Relatives in their ACL policy.
 Parent applications can use CCL on Children applications/processes.
 If the applications/processes operate within the same execution context (container). they are Neighbours.
 Children applications cannot use CCL on Parent and Neighbour applications/processes if they are not Relatives.
-To handle the process finalization tree, the metafied framework apps are called from Metafied UI Service Provider instance, positioning the process as a Children, to which the MUISP has limited operational access, and thus can call events assigned to visual elements and metafied framework app should then be able to re-run and re-fill the instance of MUISP if it crashed separately from the Children application, filling values in its visual elements where needed, this way the metafied framework type application shouldn't have excessive information about hardware rendering and HID.
+To handle the process finalization tree, the metafied framework apps are called from Metafied UI Provider Service (MUIPS) instance, positioning the process as a Children, to which the MUIPS has limited operational access, and thus can call events assigned to visual elements and metafied framework app should then be able to re-run and re-fill the instance of MUIPS if it crashed separately from the Children application, filling values in its visual elements where needed, this way the metafied framework type application shouldn't have excessive information about hardware rendering and HID.
 
 ###### CCL Isolation
 
@@ -257,7 +257,7 @@ To prevent Return-Oriented Programming (ROP) attacks, memory corruption exploits
 Parent can provide its ACL/AP traits to Children or limit them.
 If the two Neighboring apps trying to access the same HoDAP without AP or Relative status, the access will be denied.
 
-#### ID filter: hardware capabilities masking
+#### HWID filter services: hardware capabilities masking
 
 A set of user-controlled options per Workspace/Application/Process
 
@@ -363,7 +363,7 @@ When the encrypted data contains strictly structured information, with set array
 #### Application Heuristical Isolation Tool: Containers and VMs
 _**Application Heuristic Isolation Tool is a System Level Application (not the OS Core Application from which the whole functionality of the OS stems, but a vital part that must be protected and do not fall into the category of User Level Applications)**_
 
-Container [Configuration Logic:Containers] isolation is done through launching instance of the application inside an isolated Workspace context to limit its environment to virtually "clean" instance of the SyeOS without user data inside, it is done through plugging the HoDAPs and through providing Honeypot counterfeit HoDAPs; Hardware ID Filter services are ran to imitate different running conditions and mask real HW IDs.
+Container [Configuration Logic:Containers] isolation is done through launching instance of the application inside an isolated Workspace context to limit its environment to virtually "clean" instance of the SyeOS without user data inside, it is done through plugging the HoDAPs and through providing Honeypot counterfeit HoDAPs; HWID Filter services are ran to imitate different running conditions and mask real HW IDs.
 **Workspace Container Environment** - plug type of Honeypot HoDAPs establish, any non-permitted interaction will be reported to callee service (Overseer for example), application operates within the global VMM context.
 **System Level Container Environment** - Hardware will be replaced with MITM type of HoDAP Honeypot, any call to real hardware will be imitated inside RAM or routed with fixed directives, leaving the spot for the permitted connections but logging everything, previous level of isolation (Workspace Level Isolation) practices also apply, but not only the SLApps are duplicatedly ran inside the isolated context, but a conterfeit System Service (OS Core Applications) such as VMM, FSOS & etc are ran to replace the real ones inside the containered environment to prevent any possibility on the middle-to-top level of security or behavioral issue.
 **Virtual Machine Environment** - isolating and application inside a copy of the SyeOS, ran properly inside a Virtuial Machine Environment, applications emulate CPU and other hardware execution instructions of the SyeOS itself and the application tested.
@@ -523,8 +523,9 @@ FSOS must have user-defined (on machine's administartor privelegies level if it 
 
  If the FSOS is operating with files inside the RAM DS situation, the hashing routine must occur before writing to the lower level drive, operating ZFS semi-uniformely between drives, keeping the logic that the non-persistent memory devices are not suitable to house the _only_ copy of the file, and thus unification with unwritable or non-persistent media **must NOT occur** too.
 
- The optimizatory logic of stripping away the metadata must also apply when the file write is executed, to avoid re-writing or scanning file when only its metadata was edited, for such a fast pattern scan must occur before the further operations
+The optimizatory logic of stripping away the metadata must also apply when the file write is executed, to avoid re-writing or scanning file when only its metadata was edited, for such a fast pattern scan must occur before the further operations
 Blank files must do not undergo hashing process and skipped instead, if the filelink pointing to the NULL (not a deprecated or unexistant pointer in the FileSystem, but literal blank) it is considered to point to empty file, so if the metadata is present, the only information to be gained is metadata.
+If FSOS detects that application never goes into analyzing proper file's metadata before loading it, it will support edited file version with metadata placed in respectible alignment (detection algorithm is simple: the file read request occurs, but file FS metadata read event didn't occur)
 
 Inodes of the encrypted files do not undergo hashing or plain indexing procedures, they are protected, so if the file is to be encrypted, the content will get hashed AFTER the encryption procedure and do not participate in ZFS-like deduplication pool.
 
@@ -539,8 +540,6 @@ Ext5 filesystem must incorporate in itself the principles of how Ext4 stores dat
 The hash info, thus must be stored in separate section from the file's metadata, in case if any user want to add a "hash" as a name for meta tag.
 Such meta tags may be used by users to add notes to their files, so Ext5 must have support for file links inside metadata to make files associatable to each another.
 Encrypted folders support - inodes within encrypted sections must not be readable before the decryption and must be marked as encrypted.
-
- If the Ext5 FSD detects that application never goes into analyzing proper file's metadata before loading it, it will support edited file version with metadata placed in respectible alignment (detection algorithm is simple: the file read request occurs, but file FS metadata read event didn't occur)
 
  #### RAM Drive Service (RAM DS)
  _**Core OS Application**_
@@ -605,7 +604,7 @@ It is a set of process's configuration stack - from ACL & CCL, VMM, AFAO paramet
 
 ##### Workspace
 
-Workspace is a hierarchical supremitive of Container, a set of a specific to it rules and parameters to run programs, in pair with its own Work Screen (instead of so-called Virtual Desktop), thus the Work Screen provider is the same application providing the Workspace functionality itself, interacting with MUISP, ACL/CCL/AP management, app configuration and requesting Core OS Apps to provide certain access to hardware, Core OS Application or System Level Application.
+Workspace is a hierarchical supremitive of Container, a set of a specific to it rules and parameters to run programs, in pair with its own Work Screen (instead of so-called Virtual Desktop), thus the Work Screen provider is the same application providing the Workspace functionality itself, interacting with MUIPS, ACL/CCL/AP management, app configuration and requesting Core OS Apps to provide certain access to hardware, Core OS Application or System Level Application.
 Workspace parameters can define its containment level, from none all the way up to VME, with its own method to use & re-use containment layouts, such the way that structure similar to A.H.I.T environments can be re-used by user for different targets.
 Apart from just the conceptual weights, a proper Workspace must have its own WorkScreen - a set layour of applications used as the main interaction environment for Workspace [=not dictated it to be for usual Visual Interfaces only] it defines a set of apps, their relations and processes environment; for visual applications such apps can be File Navigator, Virtual Machine Viewport, Text Editors, Local NotebookLM Window, Music Player, Taskbar, etc; For the non-visual it may be audio assistant, item categorizer or even network router, network server, device data stream listener, etc.
 Configuration of Workspace must provide a way to execute certain appointed by user actions when specified event occurs -  an [Angelic Bus, Listener.EndPoint]
