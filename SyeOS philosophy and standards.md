@@ -313,7 +313,7 @@ Supported, but not advised: manually entering passkey string
 Supported, but not advised: no encryption
 Bootloader can be configured in a way, that it will be encrypted with the unique passkey, provided by the encryption module or the user, so the bootloader will be decrypted during the system start-up/wake-up process.
 
-##### Cryptvault Password Provider Service
+##### Cryptvault Password Provider Service (CPPS)
 _**Core OS Application**_
 
 In order to limit vulnerability of Cryptvault Devices, the OS's own service must isolate the device to itself exclusively during the OS shell runtime, providing cryptvault keys or cryptvault-encrypted/decrypted data to a specific HoDAPs [such Endpoints can be anything, files, strings, DB entries, device data streams, contacts, etc, ...] upon request.
@@ -337,6 +337,10 @@ Anti-Radiation (Meltdown CVE mitigation)
 If setting enabled, then **SYS_FLUSH_CRYPTO** command must be sent whenever the CPPS leaves the CPU control, to erase the possible remains of Secrets inside disputable CPU cache.
 It MUST NOT be executed under ongoing active use condition, for example if the decryption/encryption process has not yet finished executing, but it can be executed if the user credential type of data is being asked for and has not been transfered yet (application which requested must handle this condition on its own, with just report from CPPS that request time has ended).
 The **SYS_FLUSH_CRYPTO** condition must also block any new key generation or descriptor provisioning.
+
+Applications auto-provisioned TOTPs:
+For every app, if it is non-visual, an internal TOTP must be provided if the app doesn't state otherwise - it will be utilized for signing and app internal functionality.
+For every visual application or Metafied UI-framework app pair, an external TOTP (readable by user) is required, if the OS config doesn't state otherwise (ref: **MUIPS Aura**)
 
 Tip: such logic must as well be used to encrypt specific data partitions on drives or folders, to decrypt it only before the data is provided to the proper application assigned by the Filesystem Driver.
 For the matter, if the operation is to be performed for the file, a metadata stripping for file hashing must be performed by Filesystem Driver or its respective module.
@@ -431,6 +435,9 @@ CheckerBoard - faulty software, that has instabilities or plainmode crashes due 
 #### Direct Hardware Contact isolation practice
 
 #### MUIPS Aura
+To combat visual similarity app spoofing, a WM visual trait is required: MUIPS Aura
+Functionality: every appliaction will have colored shadow and/or symbolizing icon on its frame border.
+The color of the shadow and the content of the icon will vary from app-to-app, and must derive from app's external TOTP, so it can be checked by calculator which application activity user is seeing.
 
 #### System Operator and User security
 P1 Warnings and cautions about hardware, malware, operational, runtime environment threats and errors must not have option to "skip by default", even if they are recurring
