@@ -1,7 +1,7 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
 
-_Version: 4.5.4.3_
+_Version: 4.5.4.5_
 
 #### Intoduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
@@ -274,18 +274,24 @@ An application, process may expose a fixed set of pointers to its methods callin
 Such sets of on-fly calling must also have ACL and be strictly limited by the Sibliage level.
 
 ##### Sibliage:
+**Application and Package based**
+If the application is one providing the functionality through HoDAP, AP or CCL for the other, lower tier of privelegies application it is considered **Functionality Provider** [by ]{.underline} **AS**(App Sibliage)
+FP by AS, which has rights over other application and is required to be ran first before the other application is running is considered **Parent** by AS.
+Applications with Parent status is able to access the Children App's full CCL without explicit limitations to counted set of CCL elements.
+**Parent** by AS can provide its ACL/AP traits to Children or limit them, when the parent application calls Children it can directly manage its RAM/VRAM without CCL wrapping.
+**Relative** by AS apps can access each other's HoDAP(s), If the two Neighboring apps trying to access the same HoDAP without AP or Relative status, the access will be denied.
+**Neighbour** by AS are applications that share the same Access Policies traits and Providers/Parents.
 
-If the application/process is one with higher level of the privelegies, which called the new process or from which app derives its permissions/AP, it is Parent.
-If the application/process is ran from other application/process's request or it is the application that inherits permissions/AP, then it is Children.
-If the two applications/processes are run within the same containment or operate within same field of ACL/AP, they are considered Neighbours.
-Neighbours can be specified to be Relatives in their ACL policy.
+**Process based**
+If the App Proccess is calling another Application to be instantiated as a new Process, it is a **Parent** process by **PS** (Process Sibliage)
+If the App Process is the Process called into instantiation by other App Process, it is considred Children by PS.
+Parents by PS can only use CCLs on Children application processes if they have their declared ACL permissions, otherwise they are forbidden to; They cannot use direct control of the RAM/VRAM of the children processes.
+Parent by PS can specify the new process's start-up parameters, limit or expand the Children execution context (within its own eligibility spectre), provide to it HoDAP access and manage the Process's execution state (freeze/unfreeze/terminate, lower Time Priority).
+Being Parent by PS absolutely does not equal to being Parent by AS, the caller application cannot fully manage the app called, instead it is just providing to it its own or even more limited execution context, it doesn't automatically grant permission to execute CCL calls, their list must be negotiated.
+Neigbours by PS are processes called within the same execution context (container).
+Neighbour and Children apps cannot execute CCL calls, exchange HoDAPs without explicit Acces Policies, declaring two apps to be eligible to be classified as a Relatives by PS grants them access to calling specified list of CCL calls.
 
-###### Process-based sibliage:
-
-Parent applications can use CCL on Children applications/processes.
-If the applications/processes operate within the same execution context (container). they are Neighbours.
-Children applications cannot use CCL on Parent and Neighbour applications/processes if they are not Relatives.
-To handle the process finalization tree, the metafied framework apps are called from Metafied UI Provider Service (MUIPS) instance, positioning the process as a Children, to which the MUIPS has limited operational access, and thus can call events assigned to visual elements and metafied framework app should then be able to re-run and re-fill the instance of MUIPS if it crashed separately from the Children application, filling values in its visual elements where needed, this way the metafied framework type application shouldn't have excessive information about hardware rendering and HID.
+_To handle the process finalization tree, the metafied framework apps are called from Metafied UI Provider Service (MUIPS) instance, positioning the process as a Children, to which the MUIPS has limited operational access, and thus can call events assigned to visual elements and metafied framework app should then be able to re-run and re-fill the instance of MUIPS if it crashed separately from the Children application, filling values in its visual elements where needed, this way the metafied framework type application shouldn't have excessive information about hardware rendering and HID._
 
 ###### CCL Isolation
 
@@ -295,11 +301,6 @@ To prevent Return-Oriented Programming (ROP) attacks, memory corruption exploits
 1. Shadow Call Handle Tables: VMM and the OS Loader intercept all dynamic link requests and compile a unique, isolated, read-only translation map for each container context. Instead of real memory addresses, applications receive abstract, rotated session tokens (e.g., Handle_ID: 0xAF31).
 2. Late-Stage Runtime Routing: Real address binding occurs on-the-fly inside the kernel or VMM/VMM subsystem during execution. The process requests a call via Handle_ID, and the OS Core resolves and jumps to the obfuscated memory address without exposing it to the application's register visibility scope.
 3. Vault Header Lockdown: Reading of dynamic headers and meta-library symbol layout tables inside the process space is strictly disallowed (PROT_READ is stripped from metadata spaces). Any unauthorized attempt to probe or scan memory for raw address disclosures (Address Leak Attempt) is reported to Overseer as Red/Black explicit malware activity, triggering Immediate Container Termination.
-
-###### Application package-based sibliage:
-
-Parent can provide its ACL/AP traits to Children or limit them.
-If the two Neighboring apps trying to access the same HoDAP without AP or Relative status, the access will be denied.
 
 #### HWID filter services: hardware capabilities masking
 
