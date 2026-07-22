@@ -1,30 +1,30 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
 
-_Version: 4.5.4.5_
+_Version: 4.5.4.9_
 
-#### Intoduction
+#### Introduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
 Furthermore, modern UI practices become a collection of archaic visual patterns to pose more distraction than usability, it made its roots so deep into general application architecture as everyone now discard Unix philosophy and tries to re-implement a wheel, because cross-integration is nowhere to bee seen in OS and FOSS philosophies.
 SyeOS philosophy was thought after Portable Workstation requirements: virtual worskpaces, flexible action association, app sandboxing and one device multi-user support, suitable for Network Administation, Intellegence & Journalism, Investigative Scientific Analysis and Multiple Virtual Machine management.
 The provided below philosophy must apply not only to the OS itself, but for applications written for it.
 Diffrent philosophy points in paragraps are listed as PN, where P is short for Philosophy and N is a number.
 
-## Philosophy and Concepts
+## Philosophies and Concepts
 
 ### Apps
 
 #### Data Scope
 
 P1 An app should work only within its specified data scope, reducing scope of environments that already ARE or WILL be implemented by other applications and limiting its knowledge base to only what is necessary to operate, request and processing minimalism is the key to more managable apps.
-P2 An app should not expect the ideal conditions to operate within, it must posess adaptive behavior to avoid unwanted ones, such as **[Streams and Filesystem isolation, P2]**
+P2 An app should not expect the ideal conditions to operate within, it must posess adaptive behavior to avoid unwanted ones, such as **[Streams and FileSystem isolation, P2]**
 P3 An app must be ready to operate within different contextes (e.g limited data provision) ran in different instances
 P4 One configuration directory for all apps
 All apps settings should be stored in single directory with subdirectory of app or otherwise the access of one app to another app's settings should have strict data protection leveling and a system-managed permission (refer to AP in [Security] section), all of such settings must be available to edit from the settings system menu, all interconnected inherited settings should be unified, such as: keybindings for the same category of apps, thus way user will have unified control experience, it will work the same way in every app of the same type.
 
 #### Functional and visual design
 
-P1 Metafication - an app functionality must be a constructional part for package, its natural behavior must be close as to Framework-like activity in terms of programming: a single app is logic and activity in first place and only in second a unique design, if application is suitable for being used as a middle-man for other applications, it totally must - in order to reduce their unnecessary complexity, one of examples of such in regular OS will be Filesystem Dialogs - in this matter, they must be held by Filesystem Explorer App, in the same topic - application must be as compatible with console or "direct" input just as with the visual UI, separating the functional logical part from visual server part (Metafied UI).
+P1 Metafication - an app functionality must be a constructional part for package, its natural behavior must be close as to Framework-like activity in terms of programming: a single app is logic and activity in first place and only in second a unique design, if application is suitable for being used as a middle-man for other applications, it totally must - in order to reduce their unnecessary complexity, one of examples of such in regular OS will be FileSystem Dialogs - in this matter, they must be held by File Navigator, in the same topic - application must be as compatible with console or "direct" input just as with the visual UI, separating the functional logical part from visual server part (Metafied UI).
 P2 Applications must use shared classes and abstractions whenever it is possible, to limit interface variability both for visual and programming experience and make everything fit together better - such concept as where to place tab and page visual control elements must be consistant from app to app, thereby Metafied UI is better method of achieving both flexible and uniform UX
 P3 Metafied UI - for the application visual host, the visual appearance must be specified separately, in scripting matters (for example XML + json, HTML + json) and parsed by System Application for UI handling, stitching the logical and visual interfaces together.
 Functionally similar workflow apps must use the same Metafied UI design  - with 0 deviations, thus using only 1 UI capsule for every of those is preferred.
@@ -203,7 +203,7 @@ To mitigate the Buffer must have unification (no two exact requests) and a reque
 
 P1
 ACL (Access Control List) and  AP (Access Policy) everywhere.
-Every bit of information provide a **data point** for telemetry, PUPs and spyware potentially providing information to malicious actors.
+Every bit of information provide a potential **data point** for telemetry, PUPs and spyware potentially providing information to malicious actors.
 Every access route provide a potential failure point and a potential vulnerable route for malicious actor's attack vector, so must be limited only to necessary software to operate with.
 
 P2
@@ -234,9 +234,9 @@ Raw hardware data (streams) - visual, audio, etc -> Refer to further documentati
 Automated app execution and auto-play features tied to the hardware, must be not supplied with OS and warned about, when user tries to set-up such behaviors manually -> exposing any application to the data stream is vulnerable behavior, potentially opening backdoors for CVEs.
 Changing hardware configuration settings must be limited by a time delay, making it is impossible for application if it somehow broke down the OS defenses, to mask the fact of readig hardware device's data stream by turning it off and on, when it is said to stay off (audio microphone/network device on-off fluctuating on OS control level)
 
-#### Streams and Filesystem isolation
+#### Streams and FileSystem isolation
 
-Data channels & hardware data streams must rout through Routing Channel Service(s): middle-man type services or libraries to adapt the resuilting data for underlying context or to limit its spread by providing AP limitations, in such essence all of the Filesystem operations must provide interface to be hooked  by System Level Applications.
+Data channels & hardware data streams must rout through Routing Channel Service(s): middle-man type services or libraries to adapt the resuilting data for underlying context or to limit its spread by providing AP limitations, in such essence all of the FileSystem operations must provide interface to be hooked  by System Level Applications.
 P1, here - what the different apps see is not what under the hood.
 P2 don't expect data traffic to match the logistics architecture just because of architecture's own integrity - calculation, user, logic errors will eventually happen [Murphy's law]:
 General purpose data streams must be actively truncated/filtered down to expected data length and format, not behave with whatever data as granted - but to avoid, fix or discard any mutation and report to the System Event Log if any occur.
@@ -293,7 +293,7 @@ Neighbour and Children apps cannot execute CCL calls, exchange HoDAPs without ex
 
 _To handle the process finalization tree, the metafied framework apps are called from Metafied UI Provider Service (MUIPS) instance, positioning the process as a Children, to which the MUIPS has limited operational access, and thus can call events assigned to visual elements and metafied framework app should then be able to re-run and re-fill the instance of MUIPS if it crashed separately from the Children application, filling values in its visual elements where needed, this way the metafied framework type application shouldn't have excessive information about hardware rendering and HID._
 
-###### CCL Isolation
+###### CCL Isolation (VMM)
 
 CCL functionality strictly must be isolated in its own containment (presumably, VMM subroutine/sub-service):
 To prevent Return-Oriented Programming (ROP) attacks, memory corruption exploits, and reverse-engineering of memory mappings, no application or process is permitted to read raw virtual memory pointers or entry-point addresses of other processes or system meta-libraries via CCL tables without explicit Access Policy permission.
@@ -301,6 +301,49 @@ To prevent Return-Oriented Programming (ROP) attacks, memory corruption exploits
 1. Shadow Call Handle Tables: VMM and the OS Loader intercept all dynamic link requests and compile a unique, isolated, read-only translation map for each container context. Instead of real memory addresses, applications receive abstract, rotated session tokens (e.g., Handle_ID: 0xAF31).
 2. Late-Stage Runtime Routing: Real address binding occurs on-the-fly inside the kernel or VMM/VMM subsystem during execution. The process requests a call via Handle_ID, and the OS Core resolves and jumps to the obfuscated memory address without exposing it to the application's register visibility scope.
 3. Vault Header Lockdown: Reading of dynamic headers and meta-library symbol layout tables inside the process space is strictly disallowed (PROT_READ is stripped from metadata spaces). Any unauthorized attempt to probe or scan memory for raw address disclosures (Address Leak Attempt) is reported to Overseer as Red/Black explicit malware activity, triggering Immediate Container Termination.
+
+###### Pipelining and HoDAPs (VMM)
+Hardware or Device Access Endpoints is a RAM Descriptor (Pointer), pointing to a data (variable or constant buffer, method/function, object, etc) wrapped by VMM.
+
+distinct Pointer forwarding modes for each and any Wrapped Pointer(HoDAP):
+1. Constant:
+Pointer to a protected memory space, for example `const char*` or `const uint64_t*`, wrapped by VMM and protected by it with flag `PROT_READ`.
+When used: static data transmission (launch arguments, fixed object or file list, configuration parameter, meta-tag name, meta-tag metadata, file hash, etc)
+
+2. Variable:
+Pointer to assigned shared memory buffer fragment provided by VMM, limited by `Buffer Request Limit`, owner of the Pointer writes to it, while target user of the Pointer can only read it.
+When used: dynamic data (pipelining, network buffer, FileSystem stream, transit video frame)
+
+3. Method (Shadow CCL Handle):
+Handle_ID index in Shadow CCL Table is passed, upon calling OS translates the masked method call token into real adress and calls it.
+When used: signaling, event notification, complex application logical intertwining (meta-apps, libraries, meta-libraries, etc)
+
+4. Class instance (Proxy Interface Table routing):
+The object persists within the Dedicated Kernel Pool or within the Owner Process memory, the target user of the Pointer receives new Shadow CCL Table Handle_ID for the Proxy Interface Table, routing the object's fields as either Constant, Variable or Method through previously mentioned VMM routing processes.\
+
+For the Unwrapped Pointer(HoDAP):
+**VMM** maps **HoDAP** from its memory segment onto both applications simultaneously.
+For the ROP-exploit and unpermitted memory scanning, method adresses inside **vtable** must undergo **Late-Stage Runtime Routing**
+
+Wrapped Pointers is used when the Owner and Target User applications does not have **Relative** status
+Unwrapped Pointers is used when Applications have **Relative** status.
+
+##### User-based: Common Interface Separate User Mode (CISUM)
+At a permission, multiple users can use the same Workspace and same WorkScreen, associating each user to separate HIDs, giving a separate HID session to each / or by a separate VNC client account.
+When working in separate screen sessions (separate physical or virtual(VNC) Displays), control elements available only at a previlege, can be displayed for the user that have them, separate from the user who does not, but when working on the same Physical Display it is not possible, so the users must choose.
+Another matter is keeping track of CPPS and user-specific sensitive data propagation: the passwords, sensitive data must not be available, nor shared in Shared Workspace(s).
+Every HID action in such mode must be routed through Angelic Bus with the UID (User ID) layer (based on HID/VNC client id), limiting the execution of the request for users that are not eligible.
+
+Distinct methods to work with Privelegies Mismatch (users may choose one):
+1. Lower the authority level - privelegies level will be capped at the level of the lowest Workspace member.
+2. Draw adaptively for separate Screen/VNC sessions.
+3. Adaptive action, unified display - every user will see other user's action, but only user with higher privelegies can execute the actions that do require such level, the control elements will be visible to lower-tier users, but will yield Unathorized Access error or be just unresponsive.
+
+Connection management logic:
+To estable the connection, agreement between users is required, but to close, command from any of the users will suit:
+1. if the user is at lower tier, the connection will be closed for the user only
+2. If the user is at higher tier and the hardware running the Workspace is functioning as the Mainframe (the user with the higher privelegies level is not local too), then the action selected by the System Administartor will be executed
+3. If the user is the host, then the connection will be closed.
 
 #### HWID filter services: hardware capabilities masking
 
@@ -323,10 +366,10 @@ To note, any of those must be used in parallel with FSOS replacement masking tec
 
 #### Crypto and passkeys
 
-##### Filesystem hash integrity
+##### FileSystem hash integrity
 
-FSOS must strip away the file's metadata on write to drive, and then perform the hashing function on its raw content to then write the hash to the Filesystem-level metadata appointed to the file.
-The metadata to be stripped is not a Filesystem-level metadata, but a file's own metadata, baked into its content.
+FSOS must strip away the file's metadata on write to drive, and then perform the hashing function on its raw content to then write the hash to the FileSystem-level metadata appointed to the file.
+The metadata to be stripped is not a FileSystem-level metadata, but a file's own metadata, baked into its content.
 Then, on the access to the file, if the file's content is mismatched with what FSOS/FileSystem remembers last about it, it must trigger a System Pause-Warning event, displaying the warning to the user to decide either to proceed with file inside Overseer, proceed with provisioning file directly or to decline it entirely (e.g routing the file to the application)
 
 ##### Separate machine and user passkeys
@@ -335,7 +378,7 @@ Machine settings, and topmost administrative settings must be managed through th
 
 ##### Compilers lockdown
 
-Only local Filesystem interactions are permited for compiles to perform during the compilation, if downloading of some content is required, then it must be performed BEFORE the compilation software will involve.
+Only local FileSystem interactions are permited for compiles to perform during the compilation, if downloading of some content is required, then it must be performed BEFORE the compilation software will involve.
 Hybrid Overseer scanning (source and binary) is required after the compilation.
 
 ##### Binaries lockdown
@@ -367,7 +410,7 @@ For this matter,  decrypted data must never ever enter the persistent memory, on
 
 _Suggested Cryptvault Device: YubiKey_
 
-Request acception or decline must be determined through administrative level configuration setting per HoDAP, specifying if the biometric/password check is needed before proceeding, and to which ID the passkey[or passwordkey-based decryption/encryption action] pairs  (**Session Secrets**) it will point - for example, such practices of one target multiple pointers could be used to hook up the DAPs aimed at the specific contact in various messenger applications, to automatically encrypt content exchanged between the _contact_ and the user.
+Request acception or decline must be determined through administrative level configuration setting per HoDAP, specifying if the biometric/password check is needed before proceeding, and to which ID the passkey[or passwordkey-based decryption/encryption action] pairs  (**Session Secrets**) it will point - for example, such practices of one target multiple pointers could be used to hook up the HoDAPs aimed at the specific contact in various messenger applications, to automatically encrypt content exchanged between the _contact_ and the user.
 For the sake of the timestamped encryption the Cryptvault Password Provider Service must be able to perform timestamp-mutated key (TOTP) encryption, both for situations when the Cryptvault device is supporting it natively, and for situations when the Cryptvault Password Provider Service will perform it itself.
 As an option, CSAC support and time latency tolerance settings must be present.
 
@@ -472,11 +515,24 @@ Red - explicit malware behavior, which can be contained through ongoing Security
 Black - cannot be contained through current security practices of SyeOS
 
 ###### Shapes
+Checkmark - everything is good
+CheckerBoard - faulty software, that has instabilities or plainmode crashes due to data, condition variation or a run time (memory leak/subtle behavioral drift/slow but sure buffer or cache overflow/precision drift over time/sudden crashes or behavior changes and other minor instabilities)
+
 Cross - data breach / spyware mechanics, intelligence and telemetry
-Triangle - destructive mechanics such as cryptsomeware, StuxNet, etc. - diversion targetted or unintentially hardware harming software
+Triangle - obstructware, fraudware and ransomware (non-harmful directly) - ad-inducing soft, crypto mining soft, etc
+Square - destructive mechanics such as cryptsomeware, StuxNet, etc. - diversion targetted or unintentially hardware harming software
 Circle - intrusion software, RCE, botnets, etc.
-Cube - obstructware, fraudware and ransomware (non-harmful directly) - ad-inducing soft, crypto mining soft, etc
-CheckerBoard - faulty software, that has instabilities or plainmode crashes due to data, condition variation or a run time
+
+**Shapes can be combined together to mark multiple threat issues:**
+Triangle with cross inside
+
+Square with cross/triangle inside
+Square made out of triangles, connected into a cross
+
+Circle with square/triangle/cross inside
+Circle with triangle, inside which a cross
+Circle with square, inside which cross/triangle
+Circle with square inside, made out of triangles and forming a cross
 
 #### Overseer Critical Performance Scorer Module (source-code and execution analyst)
 ##### Suspicious characters counter
@@ -521,6 +577,52 @@ The dynamic TEC measurement will be used to monitor quantity of activity spikes 
 
 If the Application is not a new version of Core OS or SL App and has higher OnDe score than that of an average for previous OS Core scores, the app will trigger warning flagging the coding techniques as unusually sophisticated (high optimization is not always a sign of malware, but user input will be required to clarify the situation)
 
+#### Overseer Real-Time Protection module
+_**Core OS App**_
+
+##### Access List violation reporting
+VMM, FSOS, meta-lib & other OS services provide reports to Overseer every time an application process tries to call CCL or HoDAP it doesn't has permission to.
+If it includes a highly specific CCL/AP, the app doesn't even should have knowledge about, the suspicion level is being considered closer to malware, rather than poorly configured app or unstable application.
+
+##### Real-Time Resource Usage Monitoring
+Processes' resource usage are being reported to Overseer, if some process overuses the resources, despite the program common life cycle doesn't involve high computing demand, it will start analysis by Overseer suite.
+
+##### Real-Time Execution Error Monitoring
+If the process calls library/application method with triggering error/warning, it gets flagged as unstable.
+If the process unexpectedly freezes or crashes (terminates prematurely without proper exit status report), it gets flagged as unstable application;
+
+##### Note
+_Connected to all of the monitoring events, Overseer keep track on the execution context, connecting the dots between other behavioral reports of the application (if it only nehaves suspicious under certain conditions, the conditions must be taken as the highest consideration about suspicious activities)._
+
+##### Gatekeeper sub-module
+Data Leak Prevention subroutine, can be configured to work in both, either of the three protection modes or even entirely turned off.
+
+Sensitive data can be specified to Gatekeeper module in order to prevent the leak by actively detecting it in the traffic, such data will be monitored to not go to certain locations, dividing functionality of Gatekeeper into two separate categories.
+Data can be specified from: Password Manager (by explicitly granting Overseer the raw information about the password, so it will be encrypted only by the Overseer's own internal TOTP and stored in Overseer's userdata...), FileSystem (the file can be marked as sensitive), manually adding string to the DB.
+
+Categories of protection
+**Active Raw Binary Scanning**
+Networking services, clipboard service and keyboard filter service will report to Overseer its raw, unencrypted content and FSOS - raw only if the file is not ment to be encrypted, if the file's or packet body cannot be mistaken for binary noise inside a vast data stream (large compressed/encrypted data, media streams, etc) and plainly look like a DB/Structured Data (JSON, XML, etc) or plain text, the sensitive data fragment will be removed from the data and Overseer will be triggered to alert the user about Data Breach/warn user about reckless data sharing (if the action stems from user).
+
+**Heuristical scanning**
+1. Unified Input Stream Interception:
+ Gatekeeper cross-references the outbound payload with metadata supplied directly by FSOS and CPPS on-the-fly. real-time verification include:
+ A) In-Flight Content Hash Verification: FSOS reports the clean, stripped content hash of any data being buffered for transmission. If this hash matches a restricted file, system internal dump, or isolated application dependency, the transmission is halted.
+ B) Transient Secret Sniffing Prevention: Gatekeeper pulls active Transient Session Secrets structures from CPPS memory. Any occurrence of raw passwords, active tokens, or cryptographic remnants within the network or bluetooth frame buffers triggers immediate isolation.
+ C) Semantic Tag Matching: Ext5FSD passes attribute tags and "paperclips" associated with the source container context. Files labeled with high-security classification or contextual isolation markers cannot be exposed to outbound connections.
+
+2. Behavioral Drift and Steganography Detection:
+ Gatekeeper works in close synergy with the Overseer Critical Performance Scorer Module. If a process attempts to transfer low-complexity, static data streams (e.g., a blank image or steady audio feed), but the dynamic TEC score shows anomalous CPU/GPU cycles consumption during packet assembly, Gatekeeper flags the operation as Steganographic Leak Attempt (Shape: Cross / Color: Red), terminating the operational context immediately.
+ Uniformely, if TEC of network interface(s) for the process is abnormally high, Gatekeeper must freeze the process upon investigating before un-freezing it and releasing from the active monitoring process if the traffic doesn't contain sensitive data and meet the expectations from the application (parallel Obstructography to Steganography detection).
+ 
+3. Network Gateway Shutdown:
+ Upon detecting a critical violation, Gatekeeper fires an immediate top-priority interrupt via Angelic Bus (SYS_FLUSH_CRYPTO), commands Overseer to execute Immediate Container Termination for the offending Handle_ID, and temporarily plugs the communication interface driver to ensure zero packet escape before the operator reacts.
+
+**UnEncrypted remote FileSystem forbiddance**
+When enabled, any attempt to transfer to any of the **communication interface**, [file]{.underline}, [directory]{.underline} or [inode]{.underline} will be prohibited by Overseer's response to FSOS analytics.
+The interface will be temporarily plugged (closed) and the transfer operation inside FSOS will be terminated.
+User will be notified about this event, proposing to specify or generate a TOTP or regular Passkey for the communication interface's location (Cloud Storage, FTP server, etc.)
+
 #### System's Operator and User security
 P1 Warnings and cautions about hardware, malware, operational, runtime environment threats and errors must not have option to "skip by default", even if they are recurring
 P2 Informing techniques must be concise in order to inform fast
@@ -533,9 +635,12 @@ The color of the shadow and the content of the icon will vary from app-to-app, a
 Windows of the same app share the same Aura.
 The effect is displayed as animated semi-transparent colored shadow/outline of the Window, the ongoing sequence is derived from TOTP and so is changing every time CPPS update TOTP.
 
-Theoretical screen capture mitigation:
+**Theoretical screen capture mitigation:**
 Provide screen buffer with no "Aura" effect present - exclude the content from screen capture pipelines.
 (configurable: on/off)
+
+##### Window Manager Overseer Bridge
+Provide Overseer with HoDAP/CCL to make WM flag application/window acting unusually, by drawing on its border shape(s) in color(s) according to Overseer **Threat categorization**
 
 #### Direct Hardware Contact isolation practice
 
@@ -552,7 +657,7 @@ exFAT, FAT4
 
 ##### Workspace and Virtual Machine HID capture
 
-If needed to avoid detection of slipping through information by exposing that certain key combinations do not ever execute within the Workspace or Virtual Machine, gibing potential or hypothetical spyware a data reference, an alternative than a sequence to escape the encapsulation HID capture must be provided by SyeOS - a hook to respond on the pressing of power/reset button (not the event of lid closing for notebooks! important to not mix those up) - when the power button while inside an Workspace with active HID isolation (and there are no multiple HIDs, for example, keyboards/touchscreens to be associated with multiple screens), the SyeOS should just switch control back to the main host OS.
+If needed to avoid detection of slipping through information by exposing that certain key combinations do not ever execute within the Workspace or Virtual Machine, giving potential or hypothetical spyware a data reference, an alternative than a sequence to escape the encapsulation HID capture must be provided by SyeOS - a hook to respond on the pressing of power/reset button (not the event of lid closing for notebooks! important to not mix those up) - when the power button while inside an Workspace with active HID isolation (and there are no multiple HIDs, for example, keyboards/touchscreens to be associated with multiple screens), the SyeOS should just switch control back to the main host OS.
 Configuration entries for Workstations with HID isolation: 
 ReturnToHostESbyPowerButton (Boolean)
 SendToIsolatedEPowerButtonEvent = Mask (Send/Do not & Accept/Dismiss Isolated Environment shutdown) - if the flag Do Not Send is present, then the ACPI event won't get inside the Contained Environment's Angelic Bus or VME's ACPI device emulation.
@@ -590,7 +695,8 @@ RAM - for cache of HDD/SSD or for fast file access and then write or for cache (
 No memory interconnections established apart from usual RAIDs or back-up drives.
 
 Any of the two schemes is not colliding with the ability to set-up a back-up drive.
-While tiering and optimization is good, data integrity is no less important - logic of storing Filesystem objects in faster memory before writing them to the slower, must not be applied to removable media, in order to avoid data corruption and user confusion.
+While tiering and optimization is good, data integrity is no less important - logic of storing FileSystem objects in faster memory before writing them to the slower, must not be applied to removable media, in order to avoid data corruption and user confusion.
+If the RAM amount is insufficient to work with partitions using RAM DS, auto-tiering will suggest disabling the RAM DS.
 
 #### FileSystem Orchestration Service (FSOS)
 _**Core OS Application**_
@@ -612,7 +718,7 @@ FSOS must have user-defined (on machine's administartor privelegies level if it 
 
  Encrypted folders support - files inside folder must not be readable before the decryption and must be marked as encrypted, if FS supports - then inode encryption will take place (the Folder's Name will be encrypted too and not shown until the encryption key for it is active)
 
- Angelic Bus (Event Controller) support for all Filesystem events.
+ Angelic Bus (Event Controller) support for all FileSystem events.
 
  Compatibility provisioning of Memory Health Service, supplying it with mundane operation statistics such as what was the data write and data read speeds during every operation
 
@@ -664,11 +770,12 @@ All of the library/application will be loaded into the memory.
  #### Application File Access Optimization (AFAO)
  
  In the same manner, as VMM behaves with RAM memory fragments, some service in the OS [most likely task manager] must behave with task's files, while keeping the note in which container context the app was executed and omitting analysis of unsufficient files to monitor.
- The monitoring heuristics must analyze relation of read speed required (and how much application stales from the hikkups) - if the read rate is sufficient enough to make no real operational difference (measured by throughput from the program's inputting "pipe" to the outputting "pipe" either it be other file, data stream [audio for example] or pixel matrix; game performance is measured by the fps metrics, for se).
+ The monitoring heuristics must analyze relation of read speed required (and how much application stales from the hikkups) - if the read rate is sufficient enough to make no real operational difference (measured by throughput from the program's inputting "HoDAP pipe" to the outputting "HoDAP pipe" either it be other file, data stream [audio for example] or pixel matrix; graphics drawing performance is measured by the fps metrics, for se).
  (let's say less than 10mb by default; configurable.) while also monitoring the read/write rate required by the application's process;
+ 
  If the file is being written too fast and application stales between write operations, they need to be dealt with the new way apart from Hold and Cold loads -> Tempered Write (part by part to virtual RAM DS input stream, then to real physical memory);
  If the file is being re-written too often and it will probably damage the TBW limit sufficient enough to be concerned (not a log file, required to be appended everytime, but something like browser cache) - it must be treated as a high data corruption risk and undergo Cold Write process: stored in RAM DS until the application finishes its work or Date-Time event occurs (time passes by long enough) - {WriteOnFinish, WritePerInterval X and WriteOnFinish}.
- 
+ Otherwise, the usual (Hot Write) procedure will be assigned - file will be written when the program need so.
  User may also specify the proper approach manually.
 
 Cold Load:
@@ -722,7 +829,9 @@ Default Desktop application is File Navigator, displaying the assigned path to t
 Creating a new instance of the same Workspace Layout just creates a new WorkScreen for it, if the WorkSpace do not have **Isolated** flag
 
 #### Window Manager
-Window Manager must support Window Frame confguration in the manner:
+Window Manager must support Window Frame&Style confguration in the manner:
+Use Execution Context's Theme (Boolean)
+Custom Theme File (FileSystem Path)
 Window Auto-Anchor after nearing to other with Auto-Anchor (Boolean)
 Window Capture HID (Boolean)
 Window Type (Int)
@@ -790,7 +899,7 @@ Meta application is type of application constructed by specifying Meta-app layou
 After creating a proper Meta-app layout it can be installed locally or globally as a ULApp package.
 
 _Meta-app layouting can be used to construct IDEs from Code Editor, File Navigator, Compiler and Graphical Debugger applications._
-
+#### Section about Scriema (analog for Javascript & JSON -> Poetic Script Language [Script + Poema -> Scriema, *.scp or *.scie file extension] )
 ### Section about UX & UI
 #### Section about Metafied UI
 ##### Section about Need to distinguish apps/workflows separate in order to induce warning about their operational context or workflow difference
@@ -803,6 +912,21 @@ _Meta-app layouting can be used to construct IDEs from Code Editor, File Navigat
 #### Section about Cryptvault Configurator
 #### Section about Keyring (Password Manager)
 #### Section about File Navigator
+##### Access Policies and ACL logic
+File Navigator has access only to reading only a limited count of files - those, created by File Navigator itself and those appointed to it.
+Soecial FSOS permission, allowing File Navigator to read .fnavlist is applied when the Re-Fold practices are required or by clicking the file inside File Navigator, so the OS will ask user to allow File Navigator read the file or not.
+For the Execution Container's scope of FileSystem visibility, File Navigator can see only the list of files and directories, their meta-tags, hashes and paperclicps provided by FSOS.
+File previews, icons and such must be provided from a separate indexing service (a FSOS subservice).
+When the file is opened from File Navigator, a signal to open applcation or file in a new application is routed to the closest Container App Calling/Execution Manager (usually Workspace host), to the program only File Descriptor is passed into a respectible launch parameter or a HoDAP, if the application doesn't have access to the File Descriptor, user will be prompted to grant the access permission (for one launch, for counted time or indefinetely).
+
+##### Re-Fold View
+_Just another headwrap about pseudo-navigation_
+
+User-defined re-organization of contained in directory(directories) files and directories into alternative list representation, such representations can be then saved or read from .fnavlist files.
+
+##### Metadata Re-Fold
+Function to organize the content of directory or/and subdirectories into pseudo-folders, dedicated to the metadata tag selected for representation.
+
 #### Section about package, layout stores and such
 #### Section about metrics overview apps
 #### Section about built-in Notebook app
@@ -811,5 +935,8 @@ _Meta-app layouting can be used to construct IDEs from Code Editor, File Navigat
 #### Section about deductive environment app
 
 ### Section about Setup sequence in OS installer and user x/i of it
+To mitigate Digital Data Dark Age, SyeOS installers for non-specific hardware must all supply with all of the system packages intact, just keeping the targeted configuration as main selection for installation process.
+Binaries must be built during the installation process from the source files, confirming that the only applications which could've been contamined is the installer bootloader, installer itself and compiler.
+To optimize code execution further, compiler flags for support of CPU-specific instructions will be embedded into build configuration, so that the any program will gain as much benefit from hardware configuration as it can.
 
 Conclusion: if you think hard enough, all of the UI of SyeOS could be drawn inside a Console Shell...
