@@ -1,7 +1,7 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
 
-_Version: 4.5.4.9_
+_Version: 4.5.5.1_
 
 #### Introduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
@@ -383,7 +383,7 @@ Hybrid Overseer scanning (source and binary) is required after the compilation.
 
 ##### Binaries lockdown
 
-When the system is started up, it must lock down at least its own Core Applications and Systen Level Applications, to be write-only [to avoid hijacking and malification even if the attacker gained acces to the write privelegies and somewhere they were exposed].
+When the system is started up, it must lock down at least its own Core Applications and Systen Level Applications, to be read-only [to avoid hijacking and malification even if the attacker gained acces to the write privelegies and somewhere they were exposed].
 On the other half, the source code of every application must be stored in a package store and must be available for redaction, but thus way that both Core Application and System Level Application editing will require the Machine Settings Administrative authorization.
 If user requires, then compilation process will be performed, the resulting binaries then will be updated on the next system start-up/reboot.
 User-Level Application modification during the user session, on the other hand, won't be locked down by default, but it must be provided to user as machine-wide or/and user-wide setting, the machine-wide setting will act as a HAdE.
@@ -707,12 +707,14 @@ FSOS must incorporate in itself the principles of how Zettabyte File System work
 FSOS must have user-defined (on machine's administartor privelegies level if it touches the internal storage medias) configuration, which will specify:
 
 1. ZFS behavior (on/off)
-2. ZeroCopy unification - same content hash but different metadata into the same physical data on drive, referenced with a different filelink object, which will behave exactly like the real file, and the real one will be deleted only if all references to it will.
-3. Whether to Strip away file's metadata from file format (within file's contents) and move it to the appropriate FSOS DB file / FileSystem's own meta-tag registry (if supported)
-4. Prohibit existence of 2 files with the same hash within the same physical media partitions or not
-5. RAM DS settings & configuration
-6. Memory tiers & RAIDs configuration
-7. MHS reporting (on/off)
+2. ZFS behavior Provenance Chains (on/off)
+3. ZeroCopy unification - same content hash but different metadata into the same physical data on drive, referenced with a different filelink object, which will behave exactly like the real file, and the real one will be deleted only if all references to it will.
+4. Whether to Strip away file's metadata from file format (within file's contents) and move it to the appropriate FSOS DB file / FileSystem's own meta-tag registry (if supported)
+5. Prohibit existence of 2 files with the same hash within the same physical media partitions or not
+6. RAM DS settings & configuration
+7. Memory tiers & RAIDs configuration
+8. MHS reporting (on/off)
+9. Artifact collection policy: MASK {content, metadata, FileSystem location}
    
  Cryptvault Password Provider Service or Password Manager based encryption process must take place before the unification or prohibition process.
 
@@ -733,6 +735,16 @@ Inodes of the encrypted files do not undergo hashing or plain indexing procedure
 OS Core Binaries and System Critical Files is also opted out from deduplication procedures.
 FSOS must provide API for user or an appliaction to exclude files from deduplication pool manually.
 
+When the process writes to file during the explicit Provenance Chain versioning, file's FileSystem info receives not only the modification time and versioning, it receives information from which program at which time the file was opened, for how long edited and by which User(User ID), the information will also include the source of the file (URL, if the source is external) and associated HoDAP operating program example:
+```
+[Source:] https://github.com/ibotpeaches/APKTOOL/Readme.MD
+[HoDAP Owner(s)] networksvc(Device ID: 0as0c0), Brave Browser
+[User] AliceTheCoder
+```
+it will be stored in separate PVT(Provenance Chain Tag) block compartment, and if the FileSystem doesn't support it, then it will be stored in FSOS inner operating DBs associated with the versioning routines (ZFS functionality).
+PVT is constructed from multiple entries (Artifacts), each artifact must have cryptographical signature (signed by the application(s) TOTP) and if possible timestamped via CSAC.
+New version of the file then will be connected to the previous through the **paperclip** mechanism, providing User(s) and App(s) ability to investigate change history.
+
 #### Ext5 FileSystem Driver (Ext5FSD)
 _**Core OS Application**_
 
@@ -741,6 +753,7 @@ Ext5 filesystem must incorporate in itself the principles of how Ext4 stores dat
 The hash info, thus must be stored in separate section from the file's metadata, in case if any user want to add a "hash" as a name for meta tag.
 Such meta tags may be used by users to add notes to their files, so Ext5 must have support for file links inside metadata to make files associatable to each another.
 Encrypted folders support - inodes within encrypted sections must not be readable before the decryption and must be marked as encrypted.
+Ext5 also provide support of PVC(Provenance Chain Tag) block for file versioning, to specify the version history and give ability for FSOS to edit it and provide to the programs.
 
  #### RAM Drive Service (RAM DS)
  _**Core OS Application**_
