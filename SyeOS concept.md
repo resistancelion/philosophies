@@ -1,7 +1,7 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
 
-_Version: 4.5.5.1_
+_Version: 4.5.5.2_
 
 #### Introduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
@@ -433,6 +433,10 @@ Applications auto-provisioned TOTPs:
 For every app, if it is non-visual, an internal TOTP must be provided if the app doesn't state otherwise - it will be utilized for signing and app internal functionality.
 For every visual application or Metafied UI-framework app pair, an external TOTP (readable by user) is required, if the OS config doesn't state otherwise (ref: **Window Manager Aura**)
 
+Cryptsign procedure (for Applications and Users-UIDs):
+Cryptsign key is **Ed25519** or **ECDSA** internal created and stored in CPPS Vault per Application or User.
+When the application calls CPPS.Sign, the method will use information who the caller (application) is to retrieve the related key and sign the provided binary data with it.
+
 Tip: such logic must as well be used to encrypt specific data partitions on drives or folders, to decrypt it only before the data is provided to the proper application assigned by the FSOS.
 For the matter, if the operation is to be performed for the file, a metadata stripping for file hashing must be performed by FSOS or its respective module.
 
@@ -714,7 +718,7 @@ FSOS must have user-defined (on machine's administartor privelegies level if it 
 6. RAM DS settings & configuration
 7. Memory tiers & RAIDs configuration
 8. MHS reporting (on/off)
-9. Artifact collection policy: MASK {content, metadata, FileSystem location}
+9. Prove collection policy: MASK {content, metadata, FileSystem location}
    
  Cryptvault Password Provider Service or Password Manager based encryption process must take place before the unification or prohibition process.
 
@@ -735,25 +739,44 @@ Inodes of the encrypted files do not undergo hashing or plain indexing procedure
 OS Core Binaries and System Critical Files is also opted out from deduplication procedures.
 FSOS must provide API for user or an appliaction to exclude files from deduplication pool manually.
 
-When the process writes to file during the explicit Provenance Chain versioning, file's FileSystem info receives not only the modification time and versioning, it receives information from which program at which time the file was opened, for how long edited and by which User(User ID), the information will also include the source of the file (URL, if the source is external) and associated HoDAP operating program example:
-```
-[Source:] https://github.com/ibotpeaches/APKTOOL/Readme.MD
-[HoDAP Owner(s)] networksvc(Device ID: 0as0c0), Brave Browser
-[User] AliceTheCoder
-```
-it will be stored in separate PVT(Provenance Chain Tag) block compartment, and if the FileSystem doesn't support it, then it will be stored in FSOS inner operating DBs associated with the versioning routines (ZFS functionality).
-PVT is constructed from multiple entries (Artifacts), each artifact must have cryptographical signature (signed by the application(s) TOTP) and if possible timestamped via CSAC.
-New version of the file then will be connected to the previous through the **paperclip** mechanism, providing User(s) and App(s) ability to investigate change history.
+##### Hash collision avoidance
+To mitigate hash collisions, hash per file is stored as two parts:
+1. Datasize - size of the content hashed
+2. Hash of the content itself
+
+##### Deduction Workflow: Provenance Chain
+
+To supply user with ability to track File acquisition and editing history, FSOS realizes Data Provenance Chain (DPC).
+
+1. DPC Journal
+ DPC Journal is collection of actions (Proves) done with the specific file (connected to its instance (filelink) if the FS is under ZeroCopy protocol), its {content, metadata, FileSystem location} change by applications, stored in the associated with the file special inode metadata section (if FIleSystem Driver supports) or DataBase associated with the FileSystem Partition in which file information is stored.
+2. Prove
+   When the application accesses File Descriptor, FSOS takes a note, timestamping the event for later Prove generation, if the changes was done.
+   If the changes between previous file version and new file version exists, FSOS generates an Prove:
+   * Procedure start timestamp
+   * Procedure completion timestamp
+   * Application fingerprint: application identifier, process Handle_ID, CPPS.Sign() for the Prove (provided by the application adressing the FSOS)
+   * User fingerprint: UID and CPPS.Sign() for the Prove
+   * Source (HoDAP):
+     ```
+     NetworkDevice0, TCP https://github.com/ibotpeaches/APKTOOL/Readme.MD
+     ```
+     Prove generation can be triggered by events specified in Prove collection policy.
+     Directories and files can be forcefully included or excluded from DPC generation.
+3. Adrift protection
+    To protect the versioning histories from adrift, they are stored in secure vaults accessible only by FSOS or associated FSD(FileSystem Driver), if the endtarget of operation is not the first file itself, but a ZeroCopy protocol's filelink object, then, just like a metadata, the DPC will be stored in it instead of the file content source.
+4. Provenance Tree
+   FSOS.RequestProvenanceTree( FILE_DESCRIPTOR ) will return the Proves for current and previous file versions, tying all together.
 
 #### Ext5 FileSystem Driver (Ext5FSD)
 _**Core OS Application**_
 
 Ext5 is main FileSystem Format recommended to use within SyeOS.
 Ext5 filesystem must incorporate in itself the principles of how Ext4 stores data and per-file metadata storage in inodes to be able to specify the tags, categories, score & etc not in the file itself, but within the FileSystem, agnostically to the file type, such method must have isolated compartment for file's hash, which cannot be altered through user tools, but indeed will be assigned only by the OS Ext5 FSD.
-The hash info, thus must be stored in separate section from the file's metadata, in case if any user want to add a "hash" as a name for meta tag.
+The hash info (datasize-hash pair), thus must be stored in separate section from the file's metadata, in case if any user want to add a "hash" as a name for meta tag.
 Such meta tags may be used by users to add notes to their files, so Ext5 must have support for file links inside metadata to make files associatable to each another.
 Encrypted folders support - inodes within encrypted sections must not be readable before the decryption and must be marked as encrypted.
-Ext5 also provide support of PVC(Provenance Chain Tag) block for file versioning, to specify the version history and give ability for FSOS to edit it and provide to the programs.
+Ext5 also provide support for DPC storage.
 
  #### RAM Drive Service (RAM DS)
  _**Core OS Application**_
@@ -816,6 +839,7 @@ Every configuration is derived from the Parent one, if nothing new stated then t
 
 Container is an execution containment context rolled into an OS Data Abstract Class.
 It is a set of process's configuration stack - from ACL & CCL, VMM, AFAO parameters to set of inner application configurations appointed to specific application's instance.
+Specific HIDs can be assigned to Container, to support isolated & multi-HID input.
 
 ##### Workspace
 
@@ -854,7 +878,8 @@ Window Border Orientations [] (Degree from 0° to 180°) - as example 0°, 45°,
 Window Border positions will be derived from the known supplied Application Content Boundaries and the current size of Applcation Window.
 Window Border's Control Elements Alignment - Alignment (Left, Center, Right)
 Window Border's Control Element Rotation - will determine the rotation of the line of the elements, as they can be vertically displayed even when the Border is itself in horizontal position in relation to the Window.
-Window Border's Control Elements - Set [] of elements to display on the Border surface the property is applied to; Possible elements:
+Window Border's Control Elements - Set [] of elements to display on the Border surface the property is applied to;
+Possible Elements are: label, button, regulator (enable/disable + limitation slider)
 
 0. Close
 1. Maximize/Minimize
