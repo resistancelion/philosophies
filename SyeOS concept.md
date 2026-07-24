@@ -1,12 +1,12 @@
 # SyeOS (Systemic OS)
 **Author: the same old Lion**
 
-_Version: 4.5.5.2_
+_Version: 4.5.5.4_
 
 #### Introduction
 Modern user interface systems are now targeted at giving programs full control over hardware and data, without asking where the data goes and why, despite having almost developed measures to intervene or limit scope of the access per application, and per process.
 Furthermore, modern UI practices become a collection of archaic visual patterns to pose more distraction than usability, it made its roots so deep into general application architecture as everyone now discard Unix philosophy and tries to re-implement a wheel, because cross-integration is nowhere to bee seen in OS and FOSS philosophies.
-SyeOS philosophy was thought after Portable Workstation requirements: virtual worskpaces, flexible action association, app sandboxing and one device multi-user support, suitable for Network Administation, Intellegence & Journalism, Investigative Scientific Analysis and Multiple Virtual Machine management.
+SyeOS philosophy was thought after Workstation use cases: virtual worskpaces, flexible action association, app sandboxing and co-work essentials, suitable for Church Broadcast, Security Station, Power Transformer Console Operators, Network Administation, Intellegence & Journalism, Investigative Scientific Analysis and Multiple Virtual Machine management.
 The provided below philosophy must apply not only to the OS itself, but for applications written for it.
 Diffrent philosophy points in paragraps are listed as PN, where P is short for Philosophy and N is a number.
 
@@ -16,7 +16,7 @@ Diffrent philosophy points in paragraps are listed as PN, where P is short for P
 
 #### Data Scope
 
-P1 An app should work only within its specified data scope, reducing scope of environments that already ARE or WILL be implemented by other applications and limiting its knowledge base to only what is necessary to operate, request and processing minimalism is the key to more managable apps.
+P1 An app should work only within its specified data scope, reducing scope of environments that already IS or WILL BE implemented by other applications and limiting its knowledge base to only what is necessary to operate, request and processing minimalism is the key to more managable apps.
 P2 An app should not expect the ideal conditions to operate within, it must posess adaptive behavior to avoid unwanted ones, such as **[Streams and FileSystem isolation, P2]**
 P3 An app must be ready to operate within different contextes (e.g limited data provision) ran in different instances
 P4 One configuration directory for all apps
@@ -26,7 +26,7 @@ All apps settings should be stored in single directory with subdirectory of app 
 
 P1 Metafication - an app functionality must be a constructional part for package, its natural behavior must be close as to Framework-like activity in terms of programming: a single app is logic and activity in first place and only in second a unique design, if application is suitable for being used as a middle-man for other applications, it totally must - in order to reduce their unnecessary complexity, one of examples of such in regular OS will be FileSystem Dialogs - in this matter, they must be held by File Navigator, in the same topic - application must be as compatible with console or "direct" input just as with the visual UI, separating the functional logical part from visual server part (Metafied UI).
 P2 Applications must use shared classes and abstractions whenever it is possible, to limit interface variability both for visual and programming experience and make everything fit together better - such concept as where to place tab and page visual control elements must be consistant from app to app, thereby Metafied UI is better method of achieving both flexible and uniform UX
-P3 Metafied UI - for the application visual host, the visual appearance must be specified separately, in scripting matters (for example XML + json, HTML + json) and parsed by System Application for UI handling, stitching the logical and visual interfaces together.
+P3 Metafied UI - for the application visual host, the visual appearance must be specified separately, in scripting matters (for example XML or HTML + JSON, CSS, CSV or Scriema) and parsed by System Application for UI handling, stitching the logical and visual interfaces together.
 Functionally similar workflow apps must use the same Metafied UI design  - with 0 deviations, thus using only 1 UI capsule for every of those is preferred.
 Example: Telegram, Discord, Viber, WhatsApp, SnapChat, Facebook Messenger, Signal, Threema - can be grouped together into their own group, there is one optimal interface for "messenger" app, as the data and info flow is not flexible, unlike IDE that has specifics - one IDE for mobile apps, other for games, other for web apps & so on and so forth.
 
@@ -554,6 +554,14 @@ Source Code analysis
 
 If Overseer has test files for prevision version of the applciation source code, it tests the difference between declarations and header files, outlining the differences for the report of incompatible or extended parameters between the versions.
 
+##### HoDAP / API Buffer analysis
+Data type mismatch Source Code analysis
+
+Error and compilation prohibition if the type of outbound data is larger than the possible max received size of the data type of endpoint (Data Buffer overflow)
+Warning if the Buffer type is of the wrong type, but is compatible (Implicit typecast)
+Note if the data is underflow to the endpoint receiver (e.g Byte instead of Integer, etc)
+Note if the data is exact with the expected
+
 ##### Documentation reliability
 Source FIles general analysis
 
@@ -879,69 +887,100 @@ Window Border positions will be derived from the known supplied Application Cont
 Window Border's Control Elements Alignment - Alignment (Left, Center, Right)
 Window Border's Control Element Rotation - will determine the rotation of the line of the elements, as they can be vertically displayed even when the Border is itself in horizontal position in relation to the Window.
 Window Border's Control Elements - Set [] of elements to display on the Border surface the property is applied to;
-Possible Elements are: label, button, regulator (enable/disable + limitation slider)
+Possible Elements are: label, button, slider, regulator (button + slider), graph, drop-down list selector
+Pre-defined functionality:
+
+Combined control types:
+
+0. Z-order [Label: display; Button: pin/unpin; Slider: assign; regulator: button+slider; graph: Z-order; list: attach to Z-order of other window(list of windows)]
+1. Assigned Workspace/Screen numerical ID [Label: display; Button: pin/unpin; Slider: assign; regulator: button+slider; graph: Screen ID; list: WorkScreens]
+2. TEC [Label: display current coeff., burron: freeze/unfreeze process; slider: change process priority; regulator: button+slider; graph: TEC]
+3. Sound Level [Label: current Db; button: mute/unmute; slider: regulate volume (in percents); regulator: slider+button; graph: over-time volume Decibels; List: audio output device]
+4. Microphone Level [Label: current input sound volume Db; button: mute/unmute; slider: regulate volume (percents); regulator: slider+button; graph: over-time Microphone sound level; list: audio input devices]
+6. RAM usage [Label: current count used (in optimized units, like kB, mB, gB, etc); button: limit/unlimit; slider: regulate max; regulator: button+slider; graph: RAM usage]
+7. CPU usage
+8. VRAM usage
+9. GPU usage [+list: GPU devices]
+10. FPS [Label: current; button: limit/unlimit; slider: value to aim to; regulator: button+slider; graph: FPS over-time]
+11. Communication interface Outbound (united here in list in order not to split per each type of. Audio Card, Network, Bluetooth, USB, VNC, etc)
+    [Label: current packet size (in optimized units of Bits); button: plug/unplug process' acess to interface; slider: regulate max packet size; regulator: button+slider; graph: Interface Data Flow over-time; list: C.I device associated]
+12. Communication Interface Inbound
+13. Communication Interface Both
+14. Communication Interface Combined
+15. Notifications [Label: display notifications count; button: turn on/off; slider: regulate sound; regulator: button+slider; graph: over-time notifications count]
+16. Maximize/minimize H+V [label: current window size H,W px; button: maximize/minimize; slider: max resolution limit; regulator: button+slider; graph: over-time resolution change]
+17. Maximize/minimize Horz
+18. Maximize/Minimize Vert
+19. Scaling (window sizing) [label: current window size H,W px; button: lock/unlock scaling; slider: max scale factor (times); graph: Scale over-time (percents)]
+20. Opacity  [Label: current opacity; button: opaque/transparent; slider: regulate opacity (percent); regulator: button+slider; graph: Opacity over-time]
+21. Fold/Unfold [Label: current status(Folded/Unfolded); button: fold/unfold; slider: 0 allow fold/unfold … 1 prohibit fold/unfold; graph: Fold status over-time]
+
+Limited or unique control types:
 
 0. Close
-1. Maximize/Minimize
-2. Maximize/Minimize Horizontally
-3. Maximize/Minimize Vertically
-4. Fold Up/Unfold
-5. Hide to Current Window/Task list
-6. Pin/Unpin
-7. Enter Fullscreen Mode
-8. Scaling Lock/Unlock
-9. Move Window
-10. Open System Settings Menu for Application
-11. Open Window Manager Menu for Application
-12. Positioning Menu Opener (Menu: Window WorkScreen Anchoring, Windows Splitview/Related Layout assigner, Window Transparency, Window Z-order pin (Dynamic/Integer (fixed)/AlwaysAtBottom/AlwaysAtTop))
-13. Freeze/UnFreeze Process
-14. Open/Hide In-Window Search Bar
-15. Display Process's Console Log/Display Process's Window
-16. Throw to the next Workspace/Screen
-17. Throw to the previous Workspace/Screen
-18. Throw to the upper Workspace/Screen
-19. Throw to the bottom Workspace/Screen
-20. Show/Do Not Show Notifications
-21. Sound Level Control
-22. Sound present/mute
-23. Take screenshot
-24. Record video Start/Pause/Stop
-25. Record audio Start/Pause/Stop
-26. Screen record prohibit on/off
-27. Audio record prohibit on/off
-28. VNC transmission on/off
-29. Mic switch on/off
-30. Network switch on/off
-31. Bluetooth switch on/off
-32. RAM Graph
-33. VRAM Graph
-34. CPU Graph
-35. GPU Graph
-36. Storage Graph
-37. Audio Dbs Graph
-38. Bluetooth Activity Graph
-39. Network Activity Graph
-40. Thermodynamical Efficacy Coefficient Graph
-41. RAM Usage Label
-42. VRAM Usage Label
-43. CPU Usage Label
-44. GPU Usage Label
-45. Storage Usage Label
-46. Audio Dbs Label
-47. Bluetooth Usage Label
-48. Network Usage Label
-49. Thermodynamical Efficacy Coefficient  Label
+1. Hide to Current Window/Task list
+2. Enter Fullscreen Mode
+3. Move Window
+4. Open System Settings Menu for Application
+5. Open Window Manager Menu for Application
+6. Positioning Menu Opener (Menu: Window WorkScreen Anchoring, Windows Splitview/Related Layout assigner, Window Transparency, Window Z-order pin (Dynamic/Integer (fixed)/AlwaysAtBottom/AlwaysAtTop))
+7. Open/Hide In-Window Search Bar
+8. Display Process's Console Log/Display Process's Window
+9. Throw to the next Workspace/Screen
+10. Throw to the previous Workspace/Screen
+11. Throw to the upper Workspace/Screen
+12. Throw to the bottom Workspace/Screen
+13. Take screenshot
+14. Record video Start/Pause/Stop
+15. Record audio Start/Pause/Stop
+16. Screen record prohibit on/off
+17. Audio record prohibit on/off
 
 #### Meta-app
 Meta application is type of application constructed by specifying Meta-app layout, determining the required APs, set of required apps/framework apps, their CCL & HoDAP interaction layout and if needed - their unified Metafied UI layout file or/and their respectible application windows layout.
 After creating a proper Meta-app layout it can be installed locally or globally as a ULApp package.
 
 _Meta-app layouting can be used to construct IDEs from Code Editor, File Navigator, Compiler and Graphical Debugger applications._
-#### Section about Scriema (analog for Javascript & JSON -> Poetic Script Language [Script + Poema -> Scriema, *.scp or *.scie file extension] )
+
+#### Section about Scriema
+_(analog for Javascript & JSON -> Poetic Script Language [Script + Poema -> Scriema, *.sp file extension] )_
+_Ukrainian: Сцеома (Сценарна Поема)_
+
+Scriema uses direct HoDAP logic instead of Bash's FileSystem call-and-return philosophy, it is optimized for both Console calls and Scripted requests, since the two seem to not being separated in the SyeOS prior concepts.
+More importantly, it is oriented at the human language poetry and must support multiple language parsers for different localization packages
+
+Writing example:
+```Scriema
+Вікно нове створити, і Рамою в 4 пікселя огородити, 
+і Раму кнопками п'ятьма ту наділити:
+Закрити, Розгорнути/Загорнути, Сховати, З Екрана Геть Подіти і Звук Прибрати
+```
+```cpp
+obj1 = Window.Create();
+obj1.Frame.Width = 4px;
+obj1.Frame.Borders[0].Buttons[0..4] = [ //тут умовно Bodrder #0 - це верхній за замовченням
+    Btn.Create(), Btn.Create(), Btn.Create(), Btn.Create(), Btn.Create()
+]; 
+obj1.Frame.Borders[0].Buttons[0].Type = Close;
+obj1.Frame.Borders[0].Buttons[1].Type = FoldUnFold;
+obj1.Frame.Borders[0].Buttons[2].Type = HideToTray;
+obj1.Frame.Borders[0].Buttons[3].Type = ChangeWorkScreen;
+obj1.Frame.Borders[0].Buttons[4].Type = MuteUnMuteSound;
+
+```
+
+Syntaxis Scriema uses:
+Linguistical AND for both (```cpp with X do ...```) and semicolon or dot separation in traditional coding languages
+Paragraph naming is sub-function declaration
+Footnotes as meaning(variable, method) declaration and value assignment for _floating_ unexplained statuses, for example graphic library disambiguation and so on
+
+> But scriema usual graphic library is HIGHLY advocated to use 
+
 ### Section about UX & UI
 #### Section about Metafied UI
 ##### Section about Need to distinguish apps/workflows separate in order to induce warning about their operational context or workflow difference
 #### Section about Process clustering, splitview and WM
+#### Section about styles and themes, created through CSS/Scriema and associated with apps
 
 ### Section about Apps
 #### Section about Workspace & WorkScreen Layout Editor
@@ -973,8 +1012,10 @@ Function to organize the content of directory or/and subdirectories into pseudo-
 #### Section about deductive environment app
 
 ### Section about Setup sequence in OS installer and user x/i of it
-To mitigate Digital Data Dark Age, SyeOS installers for non-specific hardware must all supply with all of the system packages intact, just keeping the targeted configuration as main selection for installation process.
-Binaries must be built during the installation process from the source files, confirming that the only applications which could've been contamined is the installer bootloader, installer itself and compiler.
+To mitigate Digital Data Dark Age, SyeOS installers all supply with all of the system packages intact, just keeping the targeted configuration as main selection for installation process.
+To limit the Supply Chain attacks binaries must be built during the installation process from the source files, confirming that the only applications which could've been contamined is the installer bootloader, installer itself and compiler.
 To optimize code execution further, compiler flags for support of CPU-specific instructions will be embedded into build configuration, so that the any program will gain as much benefit from hardware configuration as it can.
 
-Conclusion: if you think hard enough, all of the UI of SyeOS could be drawn inside a Console Shell...
+# Conclusion
+if you think hard enough, all of the UI of SyeOS could be drawn inside a Console Shell…
+If you think hard enough, all of the Scriema features can be implemented through Emojiis or even regular Binary Instructions...
